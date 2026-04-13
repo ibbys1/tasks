@@ -1675,7 +1675,8 @@ const DEFAULTS=[
 ];
 
 let tasks=[],hist=[],nextId=28,openG={},af="All",curV="tasks",actId=null,saveTimer=null;
-let gasUrl=localStorage.getItem('ib-gas')||'';
+const DEFAULT_GAS='https://script.google.com/macros/s/AKfycbybG12rZRyQ8VnNmgxLfLjnGqUOo2dG5ScRfUv_XDdWdAsbflVP-jO5wavlcSdCNzFUjg/exec';
+let gasUrl=localStorage.getItem('ib-gas')||DEFAULT_GAS;
 
 // ── Helpers ──
 const today=()=>new Date().toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'});
