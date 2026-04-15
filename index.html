@@ -1741,8 +1741,8 @@ async function cloudSave(){
   syncInd('saving');
   try{
     const payload=JSON.stringify({tasks,hist,nextId,props:PROPS});
-    const resp=await fetch(gasUrl,{method:'POST',headers:{'Content-Type':'text/plain'},body:payload});
-    if(!resp.ok)throw new Error('HTTP '+resp.status);
+    // Use no-cors to bypass CORS restriction on GAS — data still arrives, response is opaque
+    await fetch(gasUrl,{method:'POST',mode:'no-cors',headers:{'Content-Type':'text/plain'},body:payload});
     syncInd('saved');
   }catch(e){syncInd('error');console.error('cloudSave error:',e);}
 }
@@ -1750,11 +1750,12 @@ async function cloudSave(){
 async function cloudLoad(){
   if(!gasUrl){return null;}
   try{
-    const r=await fetch(gasUrl+'?action=load');
+    // GAS GET requests work fine cross-origin
+    const r=await fetch(gasUrl+'?action=load',{mode:'cors'});
     const data=await r.json();
     if(data&&Array.isArray(data.tasks)&&data.tasks.length>0){
-      tasks=data.tasks;hist=data.hist||[];
-      nextId=data.nextId||tasks.length+1;
+      tasks=buildFromBase(data.tasks);hist=data.hist||[];
+      nextId=Math.max(nextId,data.nextId||1,...tasks.map(t=>t.id+1));
       if(data.props)Object.assign(PROPS,data.props);
       lsSave();render();syncInd('saved');return data;
     }
