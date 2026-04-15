@@ -1458,6 +1458,9 @@ body{display:flex;height:100dvh;overflow:hidden;}
           <div class="panel-h" style="margin-bottom:3px;">🤖 Ask Claude</div>
           <div class="panel-s" style="margin-bottom:0;">Ask about your tasks, mark things done, get summaries. Claude sees your full task list.</div>
         </div>
+        <div id="claude-no-key-banner" style="display:none;background:var(--orl);border-bottom:1px solid #fdd;padding:10px 16px;font-size:12px;color:#8a5a00;flex-shrink:0;">
+          ⚠️ <strong>API key needed</strong> — Add your Claude API key in <span onclick="toggleMod()" style="cursor:pointer;text-decoration:underline;font-weight:700;">⚙️ Settings</span> to use this feature.
+        </div>
         <div id="chat-msgs" style="flex:1;overflow-y:auto;padding:14px 16px;display:flex;flex-direction:column;gap:10px;">
           <div class="chat-bubble chat-ai">
             <div class="chat-avatar">C</div>
@@ -1586,6 +1589,14 @@ Auto-saves as you type."></textarea></div>
       <input class="fi" id="mod-url" placeholder="https://script.google.com/macros/s/..." style="margin-bottom:12px;">
       <button onclick="saveModUrl()" style="width:100%;font-family:'Figtree',sans-serif;font-size:14px;font-weight:700;padding:13px;background:var(--blue);color:#fff;border:none;border-radius:var(--rs);cursor:pointer;">Save &amp; connect</button>
       <div id="mod-st" style="font-size:13px;text-align:center;margin-top:10px;display:none;padding:10px;border-radius:var(--rs);"></div>
+      <div style="height:1px;background:var(--bd);margin:18px 0;"></div>
+      <label class="fl">Claude API Key <span style="font-weight:400;text-transform:none;letter-spacing:0;color:var(--tx3)">(for Ask Claude + Photo Upload)</span></label>
+      <div style="display:flex;gap:8px;margin-bottom:6px;">
+        <input class="fi" id="mod-claude-key" type="password" placeholder="sk-ant-..." style="flex:1;margin-bottom:0;">
+        <button onclick="saveClaudeKey()" style="font-family:'Figtree',sans-serif;font-size:13px;font-weight:700;padding:0 16px;background:var(--pur);color:#fff;border:none;border-radius:var(--rs);cursor:pointer;white-space:nowrap;">Save key</button>
+      </div>
+      <div style="font-size:11px;color:var(--tx3);line-height:1.6;">Get your key at <a href="https://console.anthropic.com/keys" target="_blank" style="color:var(--blue);">console.anthropic.com/keys</a>. Stored locally on this device only — never sent anywhere except Anthropic's API.</div>
+      <div id="key-st" style="font-size:13px;margin-top:8px;display:none;padding:8px 12px;border-radius:var(--rs);"></div>
     </div>
     <!-- Tab: GAS Code -->
     <div id="mod-pane-code" style="flex:1;overflow:hidden;display:none;flex-direction:column;">
@@ -1686,6 +1697,8 @@ const DEFAULTS=[
 let tasks=[],hist=[],nextId=37,openG={},af="All",curV="tasks",actId=null,saveTimer=null;
 const DEFAULT_GAS='https://script.google.com/macros/s/AKfycbybG12rZRyQ8VnNmgxLfLjnGqUOo2dG5ScRfUv_XDdWdAsbflVP-jO5wavlcSdCNzFUjg/exec';
 let gasUrl=localStorage.getItem('ib-gas')||DEFAULT_GAS;
+let claudeApiKey=localStorage.getItem('ib-claude-key')||'';
+function getAnthropicHeaders(){return{'Content-Type':'application/json','x-api-key':claudeApiKey,'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'};}
 
 // ── Helpers ──
 const today=()=>new Date().toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'});
@@ -1723,23 +1736,15 @@ function save(){
   clearTimeout(saveTimer);
   saveTimer=setTimeout(cloudSave,1800);
 }
-function cloudSave(){
+async function cloudSave(){
   if(!gasUrl){syncInd('offline');return;}
   syncInd('saving');
   try{
     const payload=JSON.stringify({tasks,hist,nextId,props:PROPS});
-    const chunkSize=1500;
-    const chunks=[];
-    for(let i=0;i<payload.length;i+=chunkSize)chunks.push(payload.slice(i,i+chunkSize));
-    const total=chunks.length;
-    let sent=0;
-    chunks.forEach((chunk,i)=>{
-      const img=new Image();
-      img.onload=img.onerror=()=>{sent++;if(sent===total)syncInd('saved');};
-      img.src=gasUrl+'?action=chunk&i='+i+'&t='+total+'&d='+encodeURIComponent(chunk);
-    });
-    if(total===0)syncInd('saved');
-  }catch(e){syncInd('error');}
+    const resp=await fetch(gasUrl,{method:'POST',headers:{'Content-Type':'text/plain'},body:payload});
+    if(!resp.ok)throw new Error('HTTP '+resp.status);
+    syncInd('saved');
+  }catch(e){syncInd('error');console.error('cloudSave error:',e);}
 }
 
 async function cloudLoad(){
@@ -1863,7 +1868,11 @@ function nav(v,el){
   if(el)el.classList.add('on');
   else{const m={tasks:0,upload:1,add:2,history:3,claude:4,export:5};document.querySelectorAll('.sb-it')[m[v]]?.classList.add('on');}
   if(v==='history')renderHist();
-  if(v==='claude')document.getElementById('chat-input')?.focus();
+  if(v==='claude'){
+    document.getElementById('chat-input')?.focus();
+    const banner=document.getElementById('claude-no-key-banner');
+    if(banner)banner.style.display=claudeApiKey?'none':'block';
+  }
   if(v==='export')renderApiDocs();
 }
 function mNav(v,el){
@@ -2159,7 +2168,7 @@ async function doUpload(input){
           .scanImage(b64,mediaType);
       } else {
         // Netlify fallback — direct API call
-        const resp=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json'},
+        const resp=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:getAnthropicHeaders(),
           body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:1500,messages:[{role:'user',content:[
             {type:'image',source:{type:'base64',media_type:mediaType,data:b64}},
             {type:'text',text:`Read this handwritten task list. Extract every task. For each: task text, best matching category from Bristol, Dupont, Sheldon, Balt St, 350 Lord, Howard 602, PG Mall, Egg Harbor, Licensing, Finance, Legal, Ops / Tech (or new category if clearly different), and any notes. Return ONLY valid JSON array: [{"cat":"Bristol","task":"task text","note":"optional"}]`}
@@ -2360,20 +2369,38 @@ function toggleMod(){
   el.style.display=isOpen?'none':'flex';
   if(!isOpen){
     document.getElementById('mod-url').value=localStorage.getItem('ib-gas')||'';
+    const ck=document.getElementById('mod-claude-key');if(ck)ck.value=localStorage.getItem('ib-claude-key')||'';
     const htmlTA=document.getElementById('html-code');
     if(htmlTA&&!htmlTA.value){htmlTA.value=document.documentElement.outerHTML;}
     modTab('url');
   }
 }
 function copyGAS(){copyCode('gas-code','gas-copy-confirm');}
+function saveClaudeKey(){
+  const key=document.getElementById('mod-claude-key').value.trim();
+  const st=document.getElementById('key-st');
+  if(!key){st.textContent='Please enter your API key.';st.style.background='var(--rdl)';st.style.color='var(--red)';st.style.display='block';return;}
+  if(!key.startsWith('sk-ant-')){st.textContent='⚠️ Key should start with sk-ant-';st.style.background='var(--orl)';st.style.color='#b87000';st.style.display='block';}
+  localStorage.setItem('ib-claude-key',key);
+  claudeApiKey=key;
+  st.textContent='✓ API key saved! Ask Claude and Photo Upload are now enabled.';st.style.background='var(--grn)';st.style.color='#005735';st.style.display='block';
+  setTimeout(()=>{st.style.display='none';},3000);
+}
 async function saveModUrl(){
   const url=document.getElementById('mod-url').value.trim();
   const st=document.getElementById('mod-st');
   if(!url){st.textContent='Please enter a URL.';st.style.color='var(--red)';st.style.display='block';return;}
-  localStorage.setItem('ib-gas',url);
-  gasUrl=url;
-  st.textContent='✓ URL saved! Syncing your tasks now...';st.style.color='var(--green)';st.style.display='block';
-  setTimeout(()=>{toggleMod();cloudSave();},1200);
+  st.textContent='Testing connection...';st.style.color='var(--tx2)';st.style.display='block';
+  try{
+    const r=await fetch(url+'?action=load');
+    if(!r.ok)throw new Error('HTTP '+r.status);
+    localStorage.setItem('ib-gas',url);
+    gasUrl=url;
+    st.textContent='✓ Connected! Syncing your tasks now...';st.style.color='var(--green)';
+    setTimeout(()=>{toggleMod();cloudSave();},1200);
+  }catch(e){
+    st.textContent='⚠️ Could not connect. Check the URL and try again.';st.style.color='var(--red)';
+  }
 }
 // ── Claude Chat ──
 let chatHistory=[];
@@ -2395,7 +2422,7 @@ async function sendChat(){
   const typingId='typing-'+Date.now();
   appendTyping(typingId);
   try{
-    const resp=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json'},
+    const resp=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:getAnthropicHeaders(),
       body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:1000,
         system:taskContext(),
         messages:chatHistory.slice(-12)})});
