@@ -1421,7 +1421,7 @@ body{display:flex;height:100dvh;overflow:hidden;}
           <div class="uz-title">Choose a photo</div>
           <div class="uz-sub">Tap to upload from your camera roll or take a new photo</div>
         </label>
-        <input type="file" id="ufi" accept="image/*" capture="environment" style="display:none;position:absolute;left:-9999px;" onchange="doUpload(this)">
+        <input type="file" id="ufi" accept="image/*" style="display:none;position:absolute;left:-9999px;" onchange="doUpload(this)">
         <div style="text-align:center;margin-top:10px;">
           <label for="ufi-gallery" style="font-size:12px;color:var(--blue);font-weight:700;cursor:pointer;text-decoration:underline;">Or choose from photo library instead</label>
           <input type="file" id="ufi-gallery" accept="image/*" style="display:none;position:absolute;left:-9999px;" onchange="doUpload(this)">
@@ -2144,53 +2144,82 @@ function renderHist(){
 async function doUpload(input){
   const file=input.files[0];if(!file)return;
   const stat=document.getElementById('aistat'),prev=document.getElementById('uprv');
-  stat.className='aistat ld';stat.style.display='block';stat.textContent='Reading your handwritten list with AI...';prev.innerHTML='';
-  const reader=new FileReader();
-  reader.onload=async(e)=>{
-    const b64=e.target.result.split(',')[1];
-    const mediaType=file.type||'image/jpeg';
-    function processResult(text){
-      try{
-        const parsed=JSON.parse(text.replace(/```json|```/g,'').trim());
-        const added=[],skipped=[];
-        parsed.forEach(item=>{
-          if(!item.task?.trim())return;
-          if(tasks.some(t=>t.cat===item.cat&&t.task.toLowerCase().trim()===item.task.toLowerCase().trim())){skipped.push(item.task);return;}
-          const nt={id:nextId++,cat:item.cat||'Ops / Tech',task:item.task.trim(),note:item.note||'',done:false,status:'todo',inhand:'',successors:[],added:new Date().toISOString().split('T')[0],isNew:true};
-          tasks.push(nt);added.push(nt);
-        });
-        if(added.length)hist.unshift({date:today(),action:'Scan merged',task:`${added.length} new item(s) from photo`,cat:'Upload'});
-        save();render();
-        stat.className='aistat ok';stat.textContent=`✓ ${added.length} new item(s) added${skipped.length?' · '+skipped.length+' duplicate(s) skipped':''}.`;
-        if(added.length)prev.innerHTML='<div style="font-size:11px;font-weight:700;color:var(--tx2);text-transform:uppercase;letter-spacing:.08em;margin:.6rem 0 .4rem;">Items added</div>'+added.map(t=>`<div style="display:flex;align-items:center;gap:9px;padding:8px 12px;background:var(--st);border:1px solid var(--bd);border-radius:var(--rs);margin-bottom:5px;"><span style="font-size:10px;font-weight:700;color:${pi(t.cat).color};text-transform:uppercase;">${t.cat}</span><span style="font-size:13px;font-weight:600;">${t.task}</span></div>`).join('');
-        input.value='';
-      }catch(err){stat.className='aistat er';stat.textContent='Could not read photo. Try again or add manually.';console.error(err);}
-    }
+  // Check API key first
+  if(!claudeApiKey){
+    stat.className='aistat er';stat.style.display='block';
+    stat.textContent='⚠️ No API key set. Go to ⚙️ Settings and add your Claude API key first.';
+    return;
+  }
+  stat.className='aistat ld';stat.style.display='block';
+  stat.textContent='📷 Reading your photo with AI... (may take 10-15 seconds)';
+  prev.innerHTML='';
+  function showError(msg){stat.className='aistat er';stat.textContent='❌ '+msg;}
+  function processResult(text){
     try{
-      if(typeof google!=='undefined'&&google.script){
-        // Hosted in GAS — route through server-side function (uses stored API key)
-        google.script.run
-          .withSuccessHandler(result=>{
-            if(!result||result.error){stat.className='aistat er';stat.textContent='Could not read photo. Try again.';return;}
-            processResult(result.text);
-          })
-          .withFailureHandler(err=>{stat.className='aistat er';stat.textContent='Could not read photo. Try again.';console.error(err);})
-          .scanImage(b64,mediaType);
-      } else {
-        // Netlify fallback — direct API call
-        const resp=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:getAnthropicHeaders(),
-          body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:1500,messages:[{role:'user',content:[
-            {type:'image',source:{type:'base64',media_type:mediaType,data:b64}},
-            {type:'text',text:`This is a handwritten PSG real estate task list. Read every line carefully. Property headings (Bristol, Dupont, Sheldon, etc.) indicate which category tasks below them belong to. For each readable item extract: task text, best matching category from Bristol, Dupont, Sheldon, Balt St, 350 Lord, Howard 602, PG Mall, Egg Harbor, Licensing, Finance, Legal, Ops / Tech. Mark crossed-out items with note "crossed out". Return ONLY a valid JSON array with no other text: [{"cat":"Bristol","task":"task text","note":""}]`}
-          ]}]})
+      const clean=text.replace(/```json[\s\S]*?```/g,m=>m.replace(/```json|```/g,'')).replace(/```/g,'').trim();
+      const startIdx=clean.indexOf('[');
+      const endIdx=clean.lastIndexOf(']');
+      if(startIdx===-1||endIdx===-1)throw new Error('No JSON array in response: '+clean.slice(0,100));
+      const parsed=JSON.parse(clean.slice(startIdx,endIdx+1));
+      const added=[],skipped=[];
+      parsed.forEach(item=>{
+        if(!item.task?.trim())return;
+        const isDup=tasks.some(t=>t.cat===item.cat&&t.task.toLowerCase().trim()===item.task.toLowerCase().trim());
+        if(isDup){skipped.push(item.task);return;}
+        const nt={id:nextId++,cat:item.cat||'Ops / Tech',task:item.task.trim(),note:item.note||'',done:false,status:'todo',inhand:'',successors:[],added:new Date().toISOString().split('T')[0],isNew:true};
+        tasks.push(nt);added.push(nt);
+      });
+      if(added.length)hist.unshift({date:today(),action:'Scan merged',task:`${added.length} new item(s) from photo`,cat:'Upload'});
+      save();render();
+      stat.className='aistat ok';
+      stat.textContent=`✅ ${added.length} task(s) added${skipped.length?' · '+skipped.length+' already existed':''}. Tasks saved to cloud.`;
+      if(added.length)prev.innerHTML='<div style="font-size:11px;font-weight:700;color:var(--tx2);text-transform:uppercase;letter-spacing:.08em;margin:.6rem 0 .4rem;">Added to board</div>'+added.map(t=>`<div style="display:flex;align-items:center;gap:9px;padding:8px 12px;background:var(--st);border:1px solid var(--bd);border-radius:var(--rs);margin-bottom:5px;"><span style="font-size:10px;font-weight:700;color:${pi(t.cat).color};text-transform:uppercase;">${t.cat}</span><span style="font-size:13px;font-weight:600;">${t.task}</span></div>`).join('');
+      input.value='';
+    }catch(err){
+      showError('Could not parse response. Try again with better lighting. ('+err.message.slice(0,60)+')');
+      console.error('processResult error:',err);
+    }
+  }
+  try{
+    const reader=new FileReader();
+    reader.onerror=()=>showError('Could not read the photo file.');
+    reader.onload=async(e)=>{
+      try{
+        const b64=e.target.result.split(',')[1];
+        const mediaType=file.type||'image/jpeg';
+        stat.textContent='🤖 Sending to Claude AI... ('+Math.round(b64.length/1024)+'KB)';
+        const resp=await fetch('https://api.anthropic.com/v1/messages',{
+          method:'POST',
+          headers:getAnthropicHeaders(),
+          body:JSON.stringify({
+            model:'claude-sonnet-4-20250514',
+            max_tokens:2000,
+            messages:[{role:'user',content:[
+              {type:'image',source:{type:'base64',media_type:mediaType,data:b64}},
+              {type:'text',text:'This is a handwritten PSG real estate task list. Read every line carefully. Property headings (Bristol, Dupont, Sheldon, etc.) mean tasks below belong to that property. Extract each readable task. Return ONLY a valid JSON array: [{"cat":"Bristol","task":"task text","note":"crossed out if applicable"}] Categories: Bristol, Dupont, Sheldon, Balt St, 350 Lord, Howard 602, PG Mall, Egg Harbor, Licensing, Finance, Legal, Ops / Tech'}
+            ]}]}
+          )
         });
-        const data=await resp.json();if(data.error)throw new Error(data.error.message);
+        if(!resp.ok){
+          const errText=await resp.text();
+          throw new Error('HTTP '+resp.status+': '+errText.slice(0,100));
+        }
+        const data=await resp.json();
+        if(data.error)throw new Error(data.error.message);
         const text=(data.content||[]).filter(b=>b.type==='text').map(b=>b.text).join('');
+        if(!text)throw new Error('Empty response from API');
+        stat.textContent='✅ Got response, adding tasks...';
         processResult(text);
+      }catch(err){
+        showError(err.message.slice(0,120));
+        console.error('doUpload inner error:',err);
       }
-    }catch(err){stat.className='aistat er';stat.textContent='Could not read photo. Try again or add manually.';console.error(err);}
-  };
-  reader.readAsDataURL(file);
+    };
+    reader.readAsDataURL(file);
+  }catch(err){
+    showError(err.message.slice(0,120));
+    console.error('doUpload outer error:',err);
+  }
 }
 
 // ── Settings / Cloud sync ──
