@@ -1825,11 +1825,10 @@ async function load(){
       .withFailureHandler(()=>syncInd('error'))
       .loadData();
   } else {
-    // On Netlify — push local data up to keep sheet current
-    syncInd('saved');
-    cloudSave();
-  } else {
-    syncInd('offline');
+    // GitHub storage — load from cloud then save any local changes
+    cloudLoad().then(data => {
+      if (!data) cloudSave(); // first time — push local tasks up
+    });
   }
 }
 
