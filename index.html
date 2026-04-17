@@ -1741,17 +1741,15 @@ async function cloudSave(){
   try{
     const payload=JSON.stringify({tasks,hist,nextId,props:PROPS});
     const b64=btoa(unescape(encodeURIComponent(payload)));
-    // Get current SHA first (needed for updates)
-    if(!_dataSha){
-      const r=await fetch(GH_API,{headers:{'Authorization':'token '+GH_PAT}});
-      if(r.ok){const d=await r.json();_dataSha=d.sha;}
-    }
+    // Always fetch fresh SHA to avoid stale-SHA conflicts
+    const shaResp=await fetch(GH_API,{headers:{'Authorization':'token '+GH_PAT},cache:'no-store'});
+    if(shaResp.ok){const sd=await shaResp.json();_dataSha=sd.sha;}
     const body={message:'sync',content:b64};
     if(_dataSha)body.sha=_dataSha;
     const resp=await fetch(GH_API,{method:'PUT',headers:{'Authorization':'token '+GH_PAT,'Content-Type':'application/json'},body:JSON.stringify(body)});
     const d=await resp.json();
     if(d.content){_dataSha=d.content.sha;syncInd('saved');}
-    else throw new Error(JSON.stringify(d));
+    else throw new Error('Save failed: '+JSON.stringify(d).slice(0,200));
   }catch(e){syncInd('error');console.error('cloudSave:',e);}
 }
 
