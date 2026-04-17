@@ -1747,20 +1747,28 @@ async function cloudSave(){
   }catch(e){syncInd('error');console.error('cloudSave error:',e);}
 }
 
-async function cloudLoad(){
-  if(!gasUrl){return null;}
-  try{
-    // GAS GET requests work fine cross-origin
-    const r=await fetch(gasUrl+'?action=load',{mode:'cors'});
-    const data=await r.json();
-    if(data&&Array.isArray(data.tasks)&&data.tasks.length>0){
-      tasks=buildFromBase(data.tasks);hist=data.hist||[];
-      nextId=Math.max(nextId,data.nextId||1,...tasks.map(t=>t.id+1));
-      if(data.props)Object.assign(PROPS,data.props);
-      lsSave();render();syncInd('saved');return data;
-    }
-    return null;
-  }catch(e){syncInd('offline');return null;}
+function cloudLoad(){
+  if(!gasUrl){return Promise.resolve(null);}
+  return new Promise((resolve)=>{
+    const cbName='_gasCb'+Date.now();
+    const s=document.createElement('script');
+    const timer=setTimeout(()=>{
+      delete window[cbName];s.remove();syncInd('offline');resolve(null);
+    },12000);
+    window[cbName]=function(data){
+      clearTimeout(timer);delete window[cbName];s.remove();
+      if(data&&Array.isArray(data.tasks)&&data.tasks.length>0){
+        tasks=buildFromBase(data.tasks);hist=data.hist||[];
+        nextId=Math.max(nextId,data.nextId||1,...tasks.map(t=>t.id+1));
+        if(data.props)Object.assign(PROPS,data.props);
+        lsSave();render();syncInd('saved');
+      }
+      resolve(data);
+    };
+    s.onerror=()=>{clearTimeout(timer);delete window[cbName];syncInd('offline');resolve(null);};
+    s.src=gasUrl+'?callback='+cbName;
+    document.head.appendChild(s);
+  });
 }
 
 
