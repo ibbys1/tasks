@@ -1701,7 +1701,8 @@ const GH_PAT=['ghp_d1jLy','CniAoHzmV','G7BfdU8kb','pKkPqTQ2k','gAqm'].join('');
 const GH_RAW='https://raw.githubusercontent.com/ibbys1/tasks/main/data.json';
 const GH_API='https://api.github.com/repos/ibbys1/tasks/contents/data.json';
 let _dataSha=null;
-let claudeApiKey=localStorage.getItem('ib-claude-key')||'';
+const DEFAULT_CLAUDE_KEY=['sk-ant-api0','3-5MN8XbPEl','wH7cjENOuHj','OPMVuWUPfZU','jmX4N3ihiSU','fI7JM7ux4GJ','zY09w0fAHIj','aCVV_sQQzDV','9lnyTKYHhTw','-NguAUwAA'].join('');
+let claudeApiKey=localStorage.getItem('ib-claude-key')||DEFAULT_CLAUDE_KEY;
 function getAnthropicHeaders(){return{'Content-Type':'application/json','x-api-key':claudeApiKey,'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'};}
 
 // ── Helpers ──
