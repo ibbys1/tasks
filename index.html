@@ -1416,12 +1416,16 @@ body{display:flex;height:100dvh;overflow:hidden;}
       <div class="panel">
         <div class="panel-h">Upload handwritten list</div>
         <div class="panel-s">Snap a photo of your weekly list. Claude reads it and merges new items — duplicates skipped.</div>
-        <div class="uzone" onclick="document.getElementById('ufi').click()">
+        <label for="ufi" class="uzone" style="cursor:pointer;display:block;">
           <div class="uz-icon">📷</div>
           <div class="uz-title">Choose a photo</div>
-          <div class="uz-sub">Tap to upload from your camera roll</div>
+          <div class="uz-sub">Tap to upload from your camera roll or take a new photo</div>
+        </label>
+        <input type="file" id="ufi" accept="image/*" capture="environment" style="display:none;position:absolute;left:-9999px;" onchange="doUpload(this)">
+        <div style="text-align:center;margin-top:10px;">
+          <label for="ufi-gallery" style="font-size:12px;color:var(--blue);font-weight:700;cursor:pointer;text-decoration:underline;">Or choose from photo library instead</label>
+          <input type="file" id="ufi-gallery" accept="image/*" style="display:none;position:absolute;left:-9999px;" onchange="doUpload(this)">
         </div>
-        <input type="file" id="ufi" accept="image/*" style="display:none" onchange="doUpload(this)">
         <div class="aistat" id="aistat"></div>
         <div id="uprv" style="margin-top:10px"></div>
       </div>
