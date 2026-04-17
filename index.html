@@ -2181,7 +2181,7 @@ async function doUpload(input){
         const resp=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:getAnthropicHeaders(),
           body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:1500,messages:[{role:'user',content:[
             {type:'image',source:{type:'base64',media_type:mediaType,data:b64}},
-            {type:'text',text:`Read this handwritten task list. Extract every task. For each: task text, best matching category from Bristol, Dupont, Sheldon, Balt St, 350 Lord, Howard 602, PG Mall, Egg Harbor, Licensing, Finance, Legal, Ops / Tech (or new category if clearly different), and any notes. Return ONLY valid JSON array: [{"cat":"Bristol","task":"task text","note":"optional"}]`}
+            {type:'text',text:`This is a handwritten PSG real estate task list. Read every line carefully. Property headings (Bristol, Dupont, Sheldon, etc.) indicate which category tasks below them belong to. For each readable item extract: task text, best matching category from Bristol, Dupont, Sheldon, Balt St, 350 Lord, Howard 602, PG Mall, Egg Harbor, Licensing, Finance, Legal, Ops / Tech. Mark crossed-out items with note "crossed out". Return ONLY a valid JSON array with no other text: [{"cat":"Bristol","task":"task text","note":""}]`}
           ]}]})
         });
         const data=await resp.json();if(data.error)throw new Error(data.error.message);
