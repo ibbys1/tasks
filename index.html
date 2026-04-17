@@ -2185,8 +2185,24 @@ async function doUpload(input){
     reader.onerror=()=>showError('Could not read the photo file.');
     reader.onload=async(e)=>{
       try{
-        const b64=e.target.result.split(',')[1];
-        const mediaType=file.type||'image/jpeg';
+        // Resize image on canvas before sending (phone photos can be 5MB+)
+        stat.textContent='📐 Resizing photo...';
+        const rawB64 = e.target.result;
+        const mediaType = 'image/jpeg';
+        const resized = await new Promise((res,rej)=>{
+          const img=new Image();
+          img.onload=()=>{
+            const maxW=1400, maxH=1400;
+            let w=img.width, h=img.height;
+            if(w>maxW||h>maxH){const r=Math.min(maxW/w,maxH/h);w=Math.round(w*r);h=Math.round(h*r);}
+            const cv=document.createElement('canvas');cv.width=w;cv.height=h;
+            cv.getContext('2d').drawImage(img,0,0,w,h);
+            res(cv.toDataURL('image/jpeg',0.85).split(',')[1]);
+          };
+          img.onerror=rej;
+          img.src=rawB64;
+        });
+        const b64=resized;
         stat.textContent='🤖 Sending to Claude AI... ('+Math.round(b64.length/1024)+'KB)';
         const resp=await fetch('https://api.anthropic.com/v1/messages',{
           method:'POST',
