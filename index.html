@@ -4,364 +4,224 @@
 <title>PSG Tasks — Ibrahim Sheikh</title>
 <link href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet">
 <style>
+@import url('https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600;700;800&display=swap');
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
 :root{
-  --bg:#f6f7fb;--white:#fff;--sb:#1f2235;--sb2:#2d3150;--sb3:#3b4170;
-  --bd:#e0e3ec;--bd2:#c8ccd8;--tx:#1a1d2e;--tx2:#5a5e78;--tx3:#a0a3b8;
-  --rh:#f0f2f8;--st:#f8f9fc;
-  --blue:#0073ea;--blu:#dbeeff;
-  --green:#00c875;--grn:#d7f7e8;
-  --org:#fdab3d;--orl:#fff4df;
-  --red:#e2445c;--rdl:#ffe4e9;
-  --pur:#a25ddc;--pul:#f0e6ff;
-  --r:8px;--rs:6px;
-  --sh:0 1px 6px rgba(0,0,0,.07),0 2px 12px rgba(0,0,0,.04);
+  --bg:#f4f5f8;--white:#ffffff;--sb:#1a1d2e;
+  --blue:#0073ea;--blu:#e6f2ff;--green:#00c875;--grn:#d7f7e8;
+  --org:#fdab3d;--orl:#fff4df;--red:#e2445c;--rdl:#ffe4e9;--pur:#a25ddc;
+  --tx:#1f2033;--tx2:#555770;--tx3:#9598aa;
+  --bd:#e5e8f0;--bd2:#d0d4e0;--sh:0 1px 4px rgba(0,0,0,.07);--r:10px;--rs:6px;
 }
-*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
-html,body{height:100%;font-family:'Figtree',sans-serif;background:var(--bg);color:var(--tx);}
-body{display:flex;height:100dvh;overflow:hidden;}
-
-/* ── Board switcher ── */
-.board-sw{display:flex;gap:0;background:rgba(255,255,255,.08);border-radius:8px;padding:3px;margin:0 0 14px;}
-.board-btn{flex:1;font-family:'Figtree',sans-serif;font-size:11px;font-weight:700;padding:6px 8px;border:none;border-radius:6px;cursor:pointer;background:transparent;color:rgba(255,255,255,.5);transition:all .15s;text-align:center;}
+body{font-family:'Figtree','Inter',system-ui,sans-serif;background:var(--bg);color:var(--tx);height:100dvh;display:flex;overflow:hidden;}
+.sb{width:220px;min-width:220px;background:var(--sb);display:flex;flex-direction:column;height:100dvh;overflow-y:auto;overflow-x:hidden;padding:0 0 20px;}
+.sb-logo{padding:18px 16px 12px;display:flex;flex-direction:column;gap:2px;}
+.sb-word{font-size:15px;font-weight:800;color:#fff;letter-spacing:-.03em;}
+.sb-ws{font-size:11px;color:rgba(255,255,255,.4);font-weight:500;}
+.board-sw{display:flex;gap:0;background:rgba(255,255,255,.08);border-radius:8px;padding:3px;margin:0 12px 12px;}
+.board-btn{flex:1;font-family:'Figtree',sans-serif;font-size:11px;font-weight:700;padding:6px 4px;border:none;border-radius:6px;cursor:pointer;background:transparent;color:rgba(255,255,255,.45);transition:all .15s;text-align:center;}
 .board-btn.on{background:rgba(255,255,255,.18);color:#fff;}
-/* ── Board switcher ── */
-/* ── Sidebar ── */
-.sb{width:230px;min-width:230px;background:var(--sb);display:flex;flex-direction:column;height:100%;overflow-y:auto;}
-.sb-logo{padding:20px 16px 16px;border-bottom:1px solid rgba(255,255,255,.07);}
-.sb-dots{display:flex;gap:4px;margin-bottom:8px;}
-.sb-dot{width:10px;height:10px;border-radius:50%;}
-.sb-word{font-size:16px;font-weight:800;color:#fff;letter-spacing:-.02em;}
-.sb-ws{font-size:11px;font-weight:600;color:rgba(255,255,255,.3);text-transform:uppercase;letter-spacing:.1em;margin-top:6px;}
-.sb-sec{padding:14px 10px 4px;}
-.sb-lbl{font-size:10px;font-weight:700;color:rgba(255,255,255,.3);text-transform:uppercase;letter-spacing:.12em;padding:0 8px;margin-bottom:6px;}
-.sb-it{display:flex;align-items:center;gap:9px;padding:9px 10px;border-radius:var(--rs);cursor:pointer;color:rgba(255,255,255,.6);font-size:13px;font-weight:500;transition:all .15s;margin-bottom:2px;}
-.sb-it:hover{background:var(--sb2);color:#fff;}
-.sb-it.on{background:var(--sb3);color:#fff;}
-.sb-cnt{margin-left:auto;font-size:11px;font-weight:700;background:rgba(255,255,255,.12);color:rgba(255,255,255,.7);padding:1px 8px;border-radius:10px;}
-.sb-div{height:1px;background:rgba(255,255,255,.06);margin:8px 10px;}
-.sb-prop{display:flex;align-items:center;gap:8px;padding:7px 10px;border-radius:var(--rs);cursor:pointer;color:rgba(255,255,255,.5);font-size:12px;font-weight:500;transition:all .15s;margin-bottom:1px;}
-.sb-prop:hover{background:var(--sb2);color:#fff;}
-
-/* ── Main ── */
-.main{flex:1;display:flex;flex-direction:column;height:100%;overflow:hidden;}
-.topbar{background:var(--white);border-bottom:2px solid var(--bd);padding:0 20px;display:flex;align-items:center;justify-content:space-between;height:58px;flex-shrink:0;}
-.tb-left{}
-.tb-title{font-size:20px;font-weight:800;color:var(--tx);letter-spacing:-.03em;}
-.tb-sub{font-size:11px;color:var(--tx3);font-weight:500;}
+.board-btn .obc{font-size:9px;background:var(--org);color:#fff;border-radius:10px;padding:1px 5px;margin-left:3px;display:inline-block;}
+.sb-sec{padding:0 8px 4px;}
+.sb-lbl{font-size:10px;font-weight:700;color:rgba(255,255,255,.25);text-transform:uppercase;letter-spacing:.1em;padding:8px 10px 4px;}
+.sb-it{display:flex;align-items:center;gap:8px;padding:7px 10px;border-radius:var(--rs);font-size:13px;font-weight:500;color:rgba(255,255,255,.6);cursor:pointer;transition:all .12s;user-select:none;}
+.sb-it:hover{background:rgba(255,255,255,.08);color:#fff;}
+.sb-it.on{background:rgba(255,255,255,.12);color:#fff;font-weight:700;}
+.sb-cnt{margin-left:auto;font-size:11px;font-weight:700;background:rgba(255,255,255,.12);color:rgba(255,255,255,.6);padding:1px 7px;border-radius:10px;}
+.sb-div{height:1px;background:rgba(255,255,255,.07);margin:6px 12px;}
+.sb-prop{display:flex;align-items:center;gap:8px;padding:5px 10px;border-radius:var(--rs);cursor:pointer;transition:all .12s;}
+.sb-prop:hover{background:rgba(255,255,255,.06);}
+.main{flex:1;display:flex;flex-direction:column;overflow:hidden;min-width:0;}
+.topbar{display:flex;align-items:center;justify-content:space-between;padding:0 20px;height:52px;background:var(--white);border-bottom:1px solid var(--bd);flex-shrink:0;}
+.tb-left{display:flex;align-items:center;gap:10px;}
+.tb-title{font-size:15px;font-weight:800;color:var(--tx);letter-spacing:-.02em;}
+.sync-dot{width:7px;height:7px;border-radius:50%;background:var(--green);flex-shrink:0;transition:background .3s;}
+.sync-dot.saving{background:var(--org);}
+.sync-dot.error{background:var(--red);}
+.sync-dot.offline{background:var(--tx3);}
 .tb-right{display:flex;align-items:center;gap:8px;}
-.sync-ind{font-size:11px;font-weight:600;color:var(--tx3);}
-.btn{font-family:'Figtree',sans-serif;font-size:13px;font-weight:700;padding:7px 14px;border-radius:var(--rs);cursor:pointer;border:none;transition:all .15s;}
+.btn{font-family:'Figtree',sans-serif;font-size:13px;font-weight:700;padding:7px 14px;border-radius:var(--rs);cursor:pointer;border:none;transition:all .12s;}
+.btn-ghost{background:transparent;color:var(--tx2);border:1.5px solid var(--bd2);}
+.btn-ghost:hover{background:var(--bg);}
 .btn-pri{background:var(--blue);color:#fff;}
-.btn-pri:hover{background:#005ec4;}
-.btn-gh{background:transparent;color:var(--tx2);border:1.5px solid var(--bd2);}
-.btn-gh:hover{background:var(--rh);}
-
-/* Filter bar */
-.fbar{background:var(--white);border-bottom:1px solid var(--bd);padding:0 20px;display:flex;align-items:center;gap:4px;height:42px;flex-shrink:0;overflow-x:auto;}
-.fbtn{font-family:'Figtree',sans-serif;font-size:12px;font-weight:600;color:var(--tx2);padding:5px 12px;border-radius:var(--rs);cursor:pointer;border:none;background:transparent;transition:all .15s;white-space:nowrap;}
-.fbtn:hover{background:var(--rh);color:var(--tx);}
-.fbtn.on{background:var(--blu);color:var(--blue);}
-.fsep{width:1px;height:18px;background:var(--bd);margin:0 4px;flex-shrink:0;}
-
-/* Content */
-.content{flex:1;overflow-y:auto;padding:18px 20px 60px;}
-
-/* Stats */
-.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:20px;}
-.sc{background:var(--white);border:1.5px solid var(--bd);border-radius:var(--r);padding:12px 14px;display:flex;align-items:center;gap:10px;box-shadow:var(--sh);}
-.sc-bar{width:5px;height:32px;border-radius:3px;flex-shrink:0;}
-.sc-n{font-size:22px;font-weight:800;color:var(--tx);line-height:1;letter-spacing:-.02em;}
-.sc-l{font-size:10px;color:var(--tx2);margin-top:3px;font-weight:600;text-transform:uppercase;letter-spacing:.05em;}
-
-/* Group */
-.grp{margin-bottom:22px;}
-.grp-hdr{display:flex;align-items:center;gap:8px;padding:0 0 7px;cursor:pointer;}
-.grp-bar{width:5px;height:26px;border-radius:3px;flex-shrink:0;}
-.grp-name{font-size:14px;font-weight:800;letter-spacing:-.02em;flex:1;}
-.grp-badge{font-size:11px;font-weight:700;color:var(--tx2);background:var(--bd);padding:2px 9px;border-radius:10px;}
-.grp-chev{font-size:10px;color:var(--tx3);}
-
-/* Table */
-.tbl{background:var(--white);border:1.5px solid var(--bd);border-radius:var(--r);overflow:hidden;box-shadow:var(--sh);}
-.thead{display:grid;grid-template-columns:32px 140px 1fr 100px 140px 70px 34px;border-bottom:2px solid var(--bd);background:var(--st);}
-.th{font-size:10px;font-weight:800;color:var(--tx2);padding:8px 11px;text-transform:uppercase;letter-spacing:.08em;border-right:1px solid var(--bd);}
-.th:last-child{border-right:none;}
-.tr{display:grid;grid-template-columns:32px 140px 1fr 100px 140px 70px 34px;border-bottom:1px solid var(--bd);align-items:stretch;transition:background .1s;}
+.btn-pri:hover{background:#0068d6;}
+.fbar{display:flex;gap:4px;padding:10px 20px;background:var(--white);border-bottom:1px solid var(--bd);flex-shrink:0;overflow-x:auto;scrollbar-width:none;}
+.fbar::-webkit-scrollbar{display:none;}
+.fbtn{font-family:'Figtree',sans-serif;font-size:12px;font-weight:600;padding:5px 12px;border-radius:20px;border:1.5px solid var(--bd2);background:transparent;color:var(--tx2);cursor:pointer;white-space:nowrap;transition:all .12s;}
+.fbtn:hover{border-color:var(--blue);color:var(--blue);}
+.fbtn.on{background:var(--blue);color:#fff;border-color:var(--blue);}
+.content{flex:1;overflow-y:auto;padding:16px 20px;}
+.board-group{margin-bottom:20px;}
+.bg-hdr{display:flex;align-items:center;justify-content:space-between;padding:6px 0 8px;cursor:pointer;user-select:none;}
+.bg-title{font-size:13px;font-weight:800;color:var(--tx);}
+.bg-meta{font-size:11px;color:var(--tx3);font-weight:600;}
+.bg-body{background:var(--white);border:1.5px solid var(--bd);border-radius:var(--r);overflow:hidden;}
+.th{display:grid;grid-template-columns:36px 180px 1fr 110px 60px 32px;align-items:center;padding:0 10px;border-bottom:1px solid var(--bd);background:var(--bg);}
+.th-cell{font-size:10px;font-weight:700;color:var(--tx3);text-transform:uppercase;letter-spacing:.07em;padding:7px 6px;}
+.tr{display:grid;grid-template-columns:36px 180px 1fr 110px 60px 32px;align-items:center;padding:0 10px;border-bottom:1px solid var(--bd);transition:background .1s;min-height:42px;}
 .tr:last-child{border-bottom:none;}
-.tr:hover{background:var(--rh);}
-.tr.done .tn{text-decoration:line-through;color:var(--tx3);}
-.td{padding:0 11px;min-height:42px;display:flex;align-items:center;border-right:1px solid var(--bd);font-size:13px;color:var(--tx);}
-.td:last-child{border-right:none;}
-.td-cb{padding:0;justify-content:center;}
-.cb{width:17px;height:17px;border:2px solid var(--bd2);border-radius:4px;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all .15s;flex-shrink:0;}
-.cb:hover{border-color:var(--blue);}
+.tr:hover{background:#f8f9fc;}
+.td{padding:7px 6px;font-size:13px;color:var(--tx);display:flex;align-items:center;}
+.td-cb{justify-content:center;padding:0;}
+.cb{width:18px;height:18px;border-radius:4px;border:2px solid var(--bd2);cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .15s;flex-shrink:0;}
 .cb.on{background:var(--green);border-color:var(--green);}
-.cb .ck{font-size:10px;color:#fff;font-weight:900;display:none;}
 .cb.on .ck{display:block;}
-
-/* Task cell */
-.tn{font-size:13px;font-weight:600;color:var(--tx);flex:1;line-height:1.4;cursor:pointer;}
-.tn:hover{color:var(--blue);}
-.nd{width:6px;height:6px;border-radius:50%;background:var(--blue);flex-shrink:0;margin-left:5px;}
-.ntag{font-size:9px;font-weight:800;padding:2px 6px;border-radius:4px;background:var(--orl);color:#b87000;margin-left:6px;text-transform:uppercase;flex-shrink:0;}
-.sb2{font-size:10px;font-weight:700;padding:2px 6px;border-radius:10px;background:var(--pul);color:#5b21b6;margin-left:5px;flex-shrink:0;}
-
-/* Property cell */
+.ck{display:none;color:#fff;font-size:10px;font-weight:900;line-height:1;}
+.tn{font-size:13px;font-weight:600;color:var(--tx);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.nd{display:inline-block;width:5px;height:5px;background:var(--blue);border-radius:50%;margin-left:5px;flex-shrink:0;}
+.ntag{font-size:9px;font-weight:800;background:var(--org);color:#fff;padding:1px 5px;border-radius:10px;margin-left:5px;text-transform:uppercase;flex-shrink:0;}
+.sb2{font-size:10px;font-weight:700;color:var(--blue);margin-left:4px;}
 .pc{display:flex;flex-direction:column;gap:1px;}
-.pn{font-size:12px;font-weight:700;}
-.pa{font-size:10px;color:var(--tx3);font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
-
-/* Status pill */
-.sp{font-size:11px;font-weight:800;padding:4px 9px;border-radius:var(--rs);text-align:center;cursor:pointer;text-transform:uppercase;letter-spacing:.04em;transition:opacity .15s;width:100%;}
-.sp:hover{opacity:.85;}
-
-/* Workstream */
-.wp{font-size:11px;font-weight:700;padding:3px 9px;border-radius:20px;white-space:nowrap;}
-
-/* Edit btn */
-.eb{font-size:13px;color:var(--tx3);cursor:pointer;width:100%;height:100%;display:flex;align-items:center;justify-content:center;opacity:0;transition:all .15s;}
-.tr:hover .eb{opacity:1;}
-.eb:hover{color:var(--blue);}
-
-/* Notes sub-row */
-.nr{display:grid;grid-template-columns:32px 140px 1fr 100px 140px 70px 34px;border-bottom:1px solid var(--bd);background:#fafbfe;}
-.nr-cell{padding:5px 12px 8px;grid-column:3/7;font-size:12px;color:var(--tx2);line-height:1.6;white-space:pre-wrap;word-break:break-word;}
-
-/* Successor row */
-.tr.succ-row{background:#fafbfe;}
-.tr.succ-row:hover{background:#f0f2f8;}
-.nr.succ-row{background:#f5f6fc;}
-
-/* Add row */
-.add-row{display:flex;align-items:center;gap:8px;padding:10px 13px;border-top:1px solid var(--bd);color:var(--blue);font-size:13px;font-weight:700;cursor:pointer;background:var(--white);transition:background .15s;}
-.add-row:hover{background:var(--blu);}
-
-/* ── Drawer ── */
-.ov{position:fixed;inset:0;background:rgba(0,0,0,.25);z-index:100;opacity:0;pointer-events:none;transition:opacity .25s;}
-.ov.on{opacity:1;pointer-events:all;}
-.dr{position:fixed;top:0;right:0;width:400px;max-width:100vw;height:100%;background:var(--white);box-shadow:-4px 0 24px rgba(0,0,0,.12);z-index:101;display:flex;flex-direction:column;transform:translateX(100%);transition:transform .25s cubic-bezier(.4,0,.2,1);}
-.dr.on{transform:translateX(0);}
-.dr-top{padding:16px 18px 12px;border-bottom:1px solid var(--bd);display:flex;align-items:flex-start;gap:10px;}
-.dr-x{font-size:18px;color:var(--tx3);cursor:pointer;padding:2px 6px;border-radius:4px;flex-shrink:0;transition:all .15s;}
-.dr-x:hover{background:var(--rh);color:var(--tx);}
-.dr-title{font-size:15px;font-weight:700;color:var(--tx);flex:1;line-height:1.4;border:none;outline:none;font-family:'Figtree',sans-serif;resize:none;background:transparent;}
-.dr-title:focus{color:var(--blue);}
-.dr-pbadge{display:flex;align-items:center;gap:8px;padding:9px 18px;background:var(--st);border-bottom:1px solid var(--bd);}
-.dr-meta{padding:12px 18px;border-bottom:1px solid var(--bd);display:flex;flex-direction:column;gap:9px;}
-.mr{display:flex;align-items:center;gap:10px;}
-.ml{font-size:11px;font-weight:700;color:var(--tx3);text-transform:uppercase;letter-spacing:.08em;width:72px;flex-shrink:0;}
-.ms{font-family:'Figtree',sans-serif;font-size:11px;font-weight:800;padding:5px 11px;border:none;border-radius:var(--rs);cursor:pointer;text-transform:uppercase;letter-spacing:.05em;outline:none;flex:1;}
-.mc{font-family:'Figtree',sans-serif;font-size:13px;font-weight:600;padding:5px 9px;border:1.5px solid var(--bd2);border-radius:var(--rs);background:var(--white);color:var(--tx);outline:none;cursor:pointer;-webkit-appearance:none;flex:1;}
-.mc:focus{border-color:var(--blue);}
-.ih{font-family:'Figtree',sans-serif;font-size:13px;font-weight:500;padding:5px 9px;border:1.5px solid var(--bd2);border-radius:var(--rs);background:var(--white);color:var(--tx);outline:none;flex:1;transition:border-color .15s;}
-.ih:focus{border-color:var(--pur);}
-
-/* Successors in drawer */
-.dr-succ{padding:11px 18px;border-bottom:1px solid var(--bd);}
-.dr-succ-title{font-size:11px;font-weight:800;color:var(--tx2);text-transform:uppercase;letter-spacing:.08em;margin-bottom:8px;}
-.succ-chips{display:flex;flex-direction:column;gap:5px;margin-bottom:8px;}
-.succ-chip{display:flex;align-items:center;gap:8px;padding:7px 10px;background:var(--st);border:1px solid var(--bd);border-radius:var(--rs);}
-.sc-info{flex:1;min-width:0;}
-.sc-name{font-size:12px;font-weight:600;color:var(--tx);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
-.sc-cat{font-size:10px;color:var(--tx3);}
-.sc-rm{font-size:13px;color:var(--tx3);cursor:pointer;padding:2px 5px;border-radius:4px;flex-shrink:0;}
-.sc-rm:hover{background:var(--rdl);color:var(--red);}
-.succ-srch{width:100%;font-family:'Figtree',sans-serif;font-size:13px;padding:7px 10px;border:1.5px solid var(--bd2);border-radius:var(--rs);background:var(--white);color:var(--tx);outline:none;transition:border-color .15s;}
-.succ-srch:focus{border-color:var(--blue);}
-.succ-dd{background:var(--white);border:1.5px solid var(--bd2);border-radius:var(--rs);max-height:150px;overflow-y:auto;display:none;margin-top:4px;box-shadow:0 4px 12px rgba(0,0,0,.1);}
-.succ-dd.on{display:block;}
-.succ-opt{padding:8px 11px;font-size:13px;cursor:pointer;border-bottom:1px solid var(--bd);}
-.succ-opt:last-child{border-bottom:none;}
-.succ-opt:hover{background:var(--rh);}
-.so-name{font-weight:600;color:var(--tx);}
-.so-cat{font-size:11px;color:var(--tx3);}
-
-/* Notes in drawer */
-.dr-notes{flex:1;display:flex;flex-direction:column;overflow:hidden;}
-.dr-nh{padding:12px 18px 8px;display:flex;align-items:center;justify-content:space-between;flex-shrink:0;}
-.dr-nt{font-size:11px;font-weight:800;color:var(--tx2);text-transform:uppercase;letter-spacing:.08em;}
-.dr-nu{font-size:11px;color:var(--tx3);}
+.pn{font-size:12px;font-weight:700;display:flex;align-items:center;gap:4px;}
+.pa{font-size:10px;color:var(--tx3);}
+.wp{font-size:10px;font-weight:700;padding:2px 8px;border-radius:20px;white-space:nowrap;}
+.sp{font-size:11px;font-weight:700;padding:3px 9px;border-radius:4px;cursor:pointer;user-select:none;white-space:nowrap;transition:filter .12s;}
+.sp:hover{filter:brightness(.93);}
+.eb{font-size:14px;color:var(--tx3);cursor:pointer;padding:4px;border-radius:4px;line-height:1;background:none;border:none;}
+.eb:hover{background:var(--bg);color:var(--tx);}
+.nr{display:grid;grid-template-columns:36px 1fr;border-bottom:1px solid var(--bd);background:#fafbfe;}
+.nr:last-child{border-bottom:none;}
+.nr-cell{grid-column:2/-1;padding:3px 6px 6px;font-size:11px;color:var(--tx3);line-height:1.5;}
+.succ-row{background:#fafbfe;}
+.bg-add{display:flex;align-items:center;gap:6px;padding:8px 10px;font-size:12px;font-weight:600;color:var(--tx3);cursor:pointer;border-top:1px dashed var(--bd);transition:all .12s;}
+.bg-add:hover{color:var(--blue);background:#f5f8ff;}
+.mct{display:none;}.mcf{display:none;}
+.ov{display:none;position:fixed;inset:0;background:rgba(0,0,0,.3);z-index:100;backdrop-filter:blur(2px);}
+.ov.on{display:block;}
+.dr{position:fixed;top:0;right:-440px;width:400px;height:100dvh;background:var(--white);box-shadow:-4px 0 20px rgba(0,0,0,.1);z-index:101;display:flex;flex-direction:column;transition:right .25s cubic-bezier(.4,0,.2,1);}
+.dr.on{right:0;}
+.dr-hdr{padding:16px 18px 12px;border-bottom:1px solid var(--bd);display:flex;align-items:center;justify-content:space-between;flex-shrink:0;}
+.dr-ttl{font-size:11px;font-weight:800;color:var(--tx3);text-transform:uppercase;letter-spacing:.1em;}
+.dr-x{font-size:20px;color:var(--tx3);cursor:pointer;border:none;background:none;line-height:1;padding:4px;}
+.dr-x:hover{color:var(--tx);}
+.dr-body{flex:1;overflow-y:auto;padding:16px 18px;}
+.dr-field{margin-bottom:14px;}
+.dr-ta{width:100%;font-family:'Figtree',sans-serif;font-size:15px;font-weight:700;color:var(--tx);border:none;outline:none;resize:none;background:transparent;line-height:1.5;padding:0;}
+.dr-pb{display:flex;align-items:center;gap:8px;padding:8px 10px;background:var(--bg);border-radius:var(--rs);margin-bottom:14px;}
+.fl{font-size:10px;font-weight:800;color:var(--tx3);text-transform:uppercase;letter-spacing:.1em;display:block;margin-bottom:5px;}
+.fi,.fsl,.mc{width:100%;font-family:'Figtree',sans-serif;font-size:13px;font-weight:500;padding:9px 11px;background:var(--white);border:1.5px solid var(--bd2);border-radius:var(--rs);color:var(--tx);outline:none;transition:border .15s;-webkit-appearance:none;}
+.fi:focus,.fsl:focus,.mc:focus{border-color:var(--blue);}
+.fi::placeholder{color:var(--tx3);}
+.fta{width:100%;font-family:'Figtree',sans-serif;font-size:13px;line-height:1.6;padding:9px 11px;background:var(--white);border:1.5px solid var(--bd2);border-radius:var(--rs);color:var(--tx);outline:none;resize:vertical;min-height:70px;}
+.fta:focus{border-color:var(--blue);}
+.dr-nh{padding:10px 18px 6px;border-bottom:1px solid var(--bd);flex-shrink:0;}
+.dr-nt{font-size:10px;font-weight:800;color:var(--tx3);text-transform:uppercase;letter-spacing:.1em;}
 .dr-nb{flex:1;padding:0 18px 16px;overflow-y:auto;}
-.dr-ta{width:100%;height:100%;min-height:140px;font-family:'Figtree',sans-serif;font-size:14px;line-height:1.7;color:var(--tx);border:none;outline:none;resize:none;background:transparent;}
-.dr-ta::placeholder{color:var(--tx3);}
-
+.succ-srch{width:100%;font-family:'Figtree',sans-serif;font-size:13px;padding:8px 11px;border:1.5px solid var(--bd2);border-radius:var(--rs);outline:none;color:var(--tx);}
+.succ-srch:focus{border-color:var(--blue);}
+.succ-dd{background:var(--white);border:1.5px solid var(--bd2);border-radius:var(--rs);margin-top:4px;max-height:160px;overflow-y:auto;display:none;}
+.succ-dd.on{display:block;}
+.succ-opt{padding:8px 12px;cursor:pointer;font-size:13px;}
+.succ-opt:hover{background:var(--bg);}
+.so-name{font-weight:600;}.so-cat{font-size:11px;margin-top:1px;}
+.succ-chips{display:flex;flex-wrap:wrap;gap:5px;margin-top:6px;}
+.succ-chip{display:flex;align-items:center;gap:4px;padding:3px 8px;background:var(--blu);color:var(--blue);border-radius:20px;font-size:11px;font-weight:600;}
+.succ-chip button{border:none;background:none;cursor:pointer;color:var(--blue);font-size:13px;line-height:1;padding:0 0 0 2px;}
+.dr-succ{position:relative;}
 .dr-foot{padding:12px 18px;border-top:1px solid var(--bd);display:flex;gap:8px;flex-shrink:0;}
-.dr-save{flex:1;font-family:'Figtree',sans-serif;font-size:13px;font-weight:700;padding:11px;background:var(--blue);color:#fff;border:none;border-radius:var(--rs);cursor:pointer;transition:all .15s;}
-.dr-save:hover{background:#005ec4;}
-.dr-del{font-family:'Figtree',sans-serif;font-size:13px;font-weight:700;padding:11px 14px;background:transparent;color:var(--red);border:1.5px solid var(--rdl);border-radius:var(--rs);cursor:pointer;}
+.dr-save{flex:1;font-family:'Figtree',sans-serif;font-size:13px;font-weight:700;padding:10px;background:var(--blue);color:#fff;border:none;border-radius:var(--rs);cursor:pointer;}
+.dr-save:hover{background:#0068d6;}
+.dr-del{font-family:'Figtree',sans-serif;font-size:13px;font-weight:700;padding:10px 14px;background:transparent;color:var(--red);border:1.5px solid var(--rdl);border-radius:var(--rs);cursor:pointer;}
 .dr-del:hover{background:var(--rdl);}
 .dr-flash{font-size:11px;font-weight:600;color:var(--green);text-align:center;margin-top:4px;display:none;}
-
-/* ── Panels ── */
-.panel{background:var(--white);border:1.5px solid var(--bd);border-radius:var(--r);padding:24px;box-shadow:var(--sh);margin-bottom:14px;}
-.panel-h{font-size:18px;font-weight:800;color:var(--tx);letter-spacing:-.02em;margin-bottom:6px;}
-.panel-s{font-size:13px;color:var(--tx2);margin-bottom:18px;line-height:1.5;}
-.uzone{border:2px dashed var(--bd2);border-radius:var(--r);padding:2.5rem 1rem;text-align:center;cursor:pointer;background:var(--bg);transition:all .2s;}
+.d-ih-row{display:none;}
+#d-st,#d-cat{margin-bottom:10px;}
+.mod-ov{display:none;position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:200;backdrop-filter:blur(2px);align-items:center;justify-content:center;}
+.mod-ov.on{display:flex;}
+.mod{background:var(--white);border-radius:12px;width:480px;max-width:calc(100vw - 32px);max-height:85dvh;display:flex;flex-direction:column;overflow:hidden;box-shadow:0 8px 40px rgba(0,0,0,.15);}
+.mod-hdr{display:flex;align-items:center;justify-content:space-between;padding:16px 20px;border-bottom:1px solid var(--bd);flex-shrink:0;}
+.mod-title{font-size:15px;font-weight:800;color:var(--tx);}
+.mod-x{font-size:20px;color:var(--tx3);cursor:pointer;border:none;background:none;line-height:1;padding:4px;}
+.mod-x:hover{color:var(--tx);}
+.mod-tabs{display:flex;border-bottom:1px solid var(--bd);padding:0 20px;flex-shrink:0;}
+.mod-tab{font-family:'Figtree',sans-serif;font-size:12px;font-weight:700;padding:10px 14px;border:none;background:none;cursor:pointer;color:var(--tx3);border-bottom:2px solid transparent;margin-bottom:-1px;transition:all .12s;}
+.mod-tab.on{color:var(--blue);border-bottom-color:var(--blue);}
+.uzone{border:2px dashed var(--bd2);border-radius:var(--r);padding:2rem 1rem;text-align:center;cursor:pointer;background:var(--bg);transition:all .2s;display:block;}
 .uzone:hover{border-color:var(--blue);background:var(--blu);}
-.uz-icon{font-size:32px;margin-bottom:12px;}
-.uz-title{font-size:15px;font-weight:800;color:var(--tx);margin-bottom:5px;}
-.uz-sub{font-size:12px;color:var(--tx2);line-height:1.6;}
-.aistat{border-radius:var(--rs);padding:11px 14px;font-size:13px;font-weight:600;margin-top:12px;display:none;border:1.5px solid;}
+.uz-icon{font-size:28px;margin-bottom:8px;}.uz-title{font-size:14px;font-weight:800;color:var(--tx);margin-bottom:4px;}.uz-sub{font-size:12px;color:var(--tx2);line-height:1.5;}
+.aistat{border-radius:var(--rs);padding:10px 14px;font-size:13px;font-weight:600;margin-top:10px;display:none;border:1.5px solid;}
 .aistat.ld{background:var(--blu);color:#004fa8;border-color:#90c4ff;}
 .aistat.ok{background:var(--grn);color:#005735;border-color:#7dd4ab;}
 .aistat.er{background:var(--rdl);color:#8c0022;border-color:#f9a3b0;}
-
-/* Form */
 .fg{display:flex;flex-direction:column;gap:12px;}
-.fl{font-size:11px;font-weight:800;color:var(--tx2);text-transform:uppercase;letter-spacing:.09em;display:block;margin-bottom:5px;}
-.fi,.fsl{width:100%;font-family:'Figtree',sans-serif;font-size:14px;font-weight:500;padding:10px 13px;background:var(--white);border:1.5px solid var(--bd2);border-radius:var(--rs);color:var(--tx);outline:none;transition:all .15s;-webkit-appearance:none;}
-.fi:focus,.fsl:focus{border-color:var(--blue);box-shadow:0 0 0 3px rgba(0,115,234,.1);}
-.fi::placeholder{color:var(--tx3);}
-.fta{width:100%;font-family:'Figtree',sans-serif;font-size:14px;line-height:1.6;padding:10px 13px;background:var(--white);border:1.5px solid var(--bd2);border-radius:var(--rs);color:var(--tx);outline:none;transition:all .15s;resize:vertical;min-height:70px;}
-.fta:focus{border-color:var(--blue);box-shadow:0 0 0 3px rgba(0,115,234,.1);}
-.fta::placeholder{color:var(--tx3);}
-.fb{font-family:'Figtree',sans-serif;font-size:14px;font-weight:800;padding:12px;background:var(--blue);color:#fff;border:none;border-radius:var(--rs);cursor:pointer;transition:all .15s;}
-.fb:hover{background:#005ec4;}
-.fc{font-size:13px;font-weight:700;padding:10px 13px;border-radius:var(--rs);margin-top:4px;display:none;text-align:center;}
-.add-new-lnk{font-size:12px;font-weight:700;color:var(--blue);cursor:pointer;margin-top:4px;display:inline-block;}
-.add-new-lnk:hover{text-decoration:underline;}
-.npf{background:var(--st);border:1.5px solid var(--bd);border-radius:var(--rs);padding:12px;margin-top:8px;display:none;flex-direction:column;gap:8px;}
-.npf.on{display:flex;}
-.npr{display:flex;gap:8px;flex-wrap:wrap;}
-.npi{font-family:'Figtree',sans-serif;font-size:13px;padding:7px 10px;border:1.5px solid var(--bd2);border-radius:var(--rs);background:var(--white);color:var(--tx);outline:none;transition:border-color .15s;flex:1;min-width:80px;}
-.npi:focus{border-color:var(--blue);}
-.npb{font-family:'Figtree',sans-serif;font-size:12px;font-weight:700;padding:7px 12px;background:var(--blue);color:#fff;border:none;border-radius:var(--rs);cursor:pointer;white-space:nowrap;}
-.npb:hover{background:#005ec4;}
-.npc{background:transparent;color:var(--tx2);border:1.5px solid var(--bd2);}
-.npc:hover{background:var(--rh);}
-
-/* History */
-.prog-card{background:var(--white);border:1.5px solid var(--bd);border-radius:var(--r);padding:20px;box-shadow:var(--sh);margin-bottom:14px;}
-.prog-pct{font-size:34px;font-weight:800;color:var(--blue);letter-spacing:-.03em;}
-.prog-sub{font-size:13px;color:var(--tx2);font-weight:600;margin-top:4px;margin-bottom:12px;}
-.pbar{height:7px;background:var(--bd);border-radius:4px;overflow:hidden;}
-.pfill{height:100%;background:var(--blue);border-radius:4px;transition:width .5s;}
-.htbl{background:var(--white);border:1.5px solid var(--bd);border-radius:var(--r);overflow:hidden;box-shadow:var(--sh);}
-.hr{display:flex;align-items:center;gap:9px;padding:10px 14px;border-bottom:1px solid var(--bd);}
-.hr:last-child{border-bottom:none;}
-.hpill{font-size:10px;font-weight:800;padding:3px 8px;border-radius:4px;text-transform:uppercase;letter-spacing:.06em;white-space:nowrap;flex-shrink:0;}
-.hp-dn{background:var(--grn);color:#005735;}
-.hp-ad{background:var(--blu);color:#004fa8;}
-.hp-rm{background:var(--rdl);color:#8c0022;}
-.hp-sc{background:var(--orl);color:#b87000;}
-.htask{font-size:13px;font-weight:600;color:var(--tx);flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
-.hcat{font-size:11px;color:var(--tx3);white-space:nowrap;}
-.hdate{font-size:11px;color:var(--tx3);white-space:nowrap;margin-left:auto;}
-
-/* Settings modal */
-.mod-ov{display:none;position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:200;align-items:stretch;justify-content:center;padding:0;}
-.mod{background:var(--white);border-radius:var(--r);padding:26px;max-width:420px;width:calc(100% - 28px);box-shadow:0 8px 32px rgba(0,0,0,.15);}
-.mod-h{font-size:17px;font-weight:800;color:var(--tx);margin-bottom:5px;}
-.mod-s{font-size:13px;color:var(--tx2);margin-bottom:18px;line-height:1.5;}
-
-/* Scrollbar */
-::-webkit-scrollbar{width:4px;height:4px;}
-::-webkit-scrollbar-thumb{background:var(--bd2);border-radius:2px;}
-
-/* Print */
+.npf{display:none;padding:10px;background:var(--bg);border-radius:var(--rs);margin-top:8px;}
+.npf.on{display:block;}
+.npr{display:flex;gap:8px;margin-bottom:8px;}
+.npi{flex:1;font-family:'Figtree',sans-serif;font-size:13px;padding:8px 10px;border:1.5px solid var(--bd2);border-radius:var(--rs);outline:none;color:var(--tx);}
+.npb{font-family:'Figtree',sans-serif;font-size:12px;font-weight:700;padding:8px 14px;border-radius:var(--rs);cursor:pointer;border:none;background:var(--blue);color:#fff;}
+.npc{background:var(--bg)!important;color:var(--tx2)!important;border:1.5px solid var(--bd2)!important;}
+.add-new-lnk{font-size:11px;color:var(--blue);cursor:pointer;font-weight:600;display:inline-block;margin-top:5px;}
+.addfc{font-size:12px;font-weight:700;color:var(--red);margin-top:4px;display:none;}
+.hist-item{display:flex;align-items:flex-start;gap:10px;padding:8px 0;border-bottom:1px solid var(--bd);}
+.hist-item:last-child{border-bottom:none;}
+.hist-dot{width:6px;height:6px;border-radius:50%;background:var(--blue);flex-shrink:0;margin-top:5px;}
+.hist-text{flex:1;font-size:13px;color:var(--tx);}
+.hist-date{font-size:11px;color:var(--tx3);white-space:nowrap;}
+.chat-bubble{display:flex;gap:10px;align-items:flex-start;}
+.chat-ai .chat-avatar{width:26px;height:26px;border-radius:50%;background:var(--pur);color:#fff;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:800;flex-shrink:0;}
+.chat-text{font-size:13px;color:var(--tx);line-height:1.6;background:var(--bg);padding:10px 14px;border-radius:0 10px 10px 10px;max-width:calc(100% - 36px);}
+.chat-user .chat-text{background:var(--blue);color:#fff;border-radius:10px 0 10px 10px;margin-left:auto;}
+.chat-user{flex-direction:row-reverse;}
+.chat-typing span{display:inline-block;width:5px;height:5px;border-radius:50%;background:var(--tx3);animation:bounce .9s infinite;}
+.chat-typing span:nth-child(2){animation-delay:.15s;}
+.chat-typing span:nth-child(3){animation-delay:.3s;}
+@keyframes bounce{0%,60%,100%{transform:translateY(0);}30%{transform:translateY(-6px);}}
+.no-key-banner{background:var(--orl);border-radius:var(--rs);padding:10px 14px;font-size:12px;color:#8a5a00;display:none;}
+.panel{background:var(--white);border:1.5px solid var(--bd);border-radius:var(--r);padding:20px;box-shadow:var(--sh);margin-bottom:14px;}
+.panel-h{font-size:16px;font-weight:800;color:var(--tx);letter-spacing:-.02em;margin-bottom:5px;}
+.panel-s{font-size:13px;color:var(--tx2);margin-bottom:16px;line-height:1.5;}
+.exp-btn{display:flex;align-items:center;gap:10px;width:100%;padding:12px 14px;border-radius:var(--rs);border:1.5px solid var(--bd2);background:var(--white);font-family:'Figtree',sans-serif;font-size:13px;font-weight:700;cursor:pointer;text-align:left;transition:all .12s;color:var(--tx);}
+.exp-btn:hover{border-color:var(--blue);background:var(--blu);}
+.exp-icon{font-size:18px;}.exp-desc{font-size:11px;font-weight:500;color:var(--tx3);margin-top:1px;}
+.copy-confirm{display:none;align-items:center;font-size:12px;font-weight:700;color:var(--green);}
+.imp-flash{font-size:12px;font-weight:700;margin-top:8px;display:none;}
+.done-sec{margin-top:16px;border-top:1.5px solid var(--bd);padding-top:12px;}
+.done-hdr{display:flex;align-items:center;justify-content:space-between;padding:4px 0 0;cursor:pointer;user-select:none;}
+.done-title{display:flex;align-items:center;gap:8px;font-size:12px;font-weight:700;color:var(--tx3);}
+.done-cnt{background:var(--grn);color:#005735;padding:1px 7px;border-radius:10px;font-size:11px;}
+.done-toggle{font-size:11px;color:var(--tx3);font-weight:600;}
+.done-row{display:flex;align-items:center;gap:8px;padding:7px 10px;border-radius:var(--rs);margin-top:4px;background:var(--bg);}
+.done-cat{font-size:10px;font-weight:700;padding:2px 7px;border-radius:20px;}
+.done-task{font-size:12px;color:var(--tx3);text-decoration:line-through;flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.done-meta{font-size:10px;color:var(--tx3);flex-shrink:0;white-space:nowrap;}
+.api-row{display:flex;align-items:center;gap:8px;padding:8px 12px;background:var(--bg);border-radius:var(--rs);margin-bottom:6px;font-family:monospace;font-size:11px;color:var(--tx2);}
+.api-method{font-weight:800;color:var(--blue);}
+.sync-ind{font-size:12px;font-weight:700;}
 @media print{
   body{display:block!important;overflow:auto!important;background:#fff!important;}
-  .sb,.mnav,.mfab,.topbar,.fbar,.ov,.dr,.mod-ov,#v-upload,#v-add,#v-history,#v-claude,#v-export{display:none!important;}
+  .sb,.topbar,.fbar,.ov,.dr,.mod-ov,.mnav,.mfab{display:none!important;}
   #print-report{display:block!important;}
   .main,.content{overflow:visible!important;height:auto!important;}
-  .pr-page{padding:0;margin:0;}
 }
-#print-report{display:none;}
-
-/* API docs */
-.api-endpoint{margin-bottom:14px;border:1.5px solid var(--bd);border-radius:var(--r);overflow:hidden;}
-.api-ep-hdr{display:flex;align-items:center;gap:8px;padding:9px 12px;background:var(--st);border-bottom:1px solid var(--bd);}
-.api-method{font-size:10px;font-weight:800;padding:3px 8px;border-radius:4px;letter-spacing:.06em;flex-shrink:0;}
-.api-method.GET{background:#d7f7e8;color:#005735;}
-.api-method.POST{background:var(--blu);color:#004fa8;}
-.api-desc{font-size:12px;font-weight:600;color:var(--tx2);flex:1;}
-.api-url-row{display:flex;align-items:center;gap:6px;padding:8px 12px;background:var(--white);}
-.api-url{font-family:monospace;font-size:11px;color:var(--tx);background:var(--st);border:1px solid var(--bd);border-radius:4px;padding:5px 9px;flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
-.api-copy{font-family:'Figtree',sans-serif;font-size:11px;font-weight:700;padding:5px 10px;background:var(--blue);color:#fff;border:none;border-radius:4px;cursor:pointer;flex-shrink:0;}
-.api-copy:hover{background:#005ec4;}
-.api-body{padding:8px 12px;background:var(--white);border-top:1px solid var(--bd);}
-.api-body pre{font-family:monospace;font-size:11px;color:var(--tx2);background:var(--st);border:1px solid var(--bd);border-radius:4px;padding:8px 10px;overflow-x:auto;white-space:pre;line-height:1.6;}
-
-/* Chat */
-.chat-bubble{display:flex;gap:9px;align-items:flex-start;}
-.chat-bubble.chat-user{flex-direction:row-reverse;}
-.chat-avatar{width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:800;flex-shrink:0;}
-.chat-bubble.chat-ai .chat-avatar{background:linear-gradient(135deg,#0073ea,#a25ddc);color:#fff;}
-.chat-bubble.chat-user .chat-avatar{background:var(--tx);color:#fff;font-size:11px;}
-.chat-text{background:var(--st);border:1px solid var(--bd);border-radius:12px;padding:9px 13px;font-size:13px;color:var(--tx);line-height:1.6;max-width:85%;}
-.chat-bubble.chat-user .chat-text{background:var(--blue);color:#fff;border-color:var(--blue);}
-.chat-bubble.chat-ai .chat-text em{color:var(--blue);font-style:normal;font-weight:600;}
-.chat-typing{display:flex;gap:4px;padding:4px 2px;}
-.chat-typing span{width:7px;height:7px;border-radius:50%;background:var(--tx3);animation:blink 1.2s infinite;}
-.chat-typing span:nth-child(2){animation-delay:.2s;}
-.chat-typing span:nth-child(3){animation-delay:.4s;}
-@keyframes blink{0%,80%,100%{opacity:.2;}40%{opacity:1;}}
-
-/* ── MOBILE ── */
-@media(max-width:680px){
+@media(max-width:768px){
   .sb{display:none;}
-  body{flex-direction:column;}
-  .main{padding-bottom:64px;}
-  .content{padding:10px 10px 20px;-webkit-overflow-scrolling:touch;}
-  .topbar{padding:0 12px;height:50px;}
-  .tb-title{font-size:16px;}
-  .tb-sub,.btn-gh{display:none;}
-  .btn-pri{font-size:12px;padding:6px 11px;}
-  .sync-ind{display:none;}
-  .fbar{padding:6px 10px;gap:5px;height:auto;}
-  .fbtn{font-size:11px;padding:5px 11px;border-radius:20px;border:1px solid var(--bd2);}
-  .fbtn.on{border-color:var(--blue);}
-  .fsep{display:none;}
-  .stats{grid-template-columns:repeat(2,1fr);gap:8px;margin-bottom:12px;}
-  .sc{padding:10px 11px;gap:8px;}
-  .sc-n{font-size:20px;}
-  .sc-l{font-size:9px;}
-  /* Card layout */
-  .tbl{border:none;background:transparent;box-shadow:none;}
-  .thead{display:none;}
-  .tr{display:flex;flex-direction:column;background:var(--white);border:1px solid var(--bd);border-radius:var(--r);margin-bottom:6px;min-height:unset;box-shadow:0 1px 4px rgba(0,0,0,.05);}
-  .tr:hover{background:var(--white);}
-  .tr.done{opacity:.7;}
-  .td{display:none;border:none;min-height:unset;}
-  .td-cb{display:none;}
-  .tr.succ-row{margin-left:16px;border-left:3px solid var(--bd2);background:var(--st);}
-  .nr{display:block;background:#fafbfe;border-radius:0 0 var(--r) var(--r);border:1px solid var(--bd);border-top:none;margin-bottom:6px;margin-top:-6px;padding:7px 11px 9px;}
-  .nr-cell{padding:0;font-size:12px;}
-  .nr.succ-row{margin-left:16px;}
-  .add-row{border-radius:var(--r);border:1.5px dashed var(--bd2);margin-bottom:6px;justify-content:center;padding:12px;}
-  /* Mobile card internals */
-  .mct{display:flex;align-items:flex-start;gap:9px;padding:11px 11px 0;}
-  .mcb-wrap{flex-shrink:0;padding-top:1px;}
-  .mc-main{flex:1;min-width:0;cursor:pointer;}
-  .mc-name{font-size:14px;font-weight:600;color:var(--tx);line-height:1.4;margin-bottom:4px;}
-  .mc-meta{display:flex;align-items:center;gap:5px;flex-wrap:wrap;}
-  .mc-prop{font-size:10px;font-weight:700;padding:2px 7px;border-radius:10px;}
-  .mc-edit{font-size:18px;color:var(--tx3);padding:3px;flex-shrink:0;cursor:pointer;}
-  .mcf{display:flex;align-items:center;gap:7px;padding:7px 11px 10px;border-top:1px solid var(--bd);margin-top:8px;}
-  .mcf-st{flex:1;}
-  .mcf-days{font-size:11px;font-weight:700;padding:3px 8px;border-radius:20px;flex-shrink:0;}
-  /* Drawer slides up */
-  .dr{width:100vw;height:91dvh;top:auto;bottom:0;right:0;border-radius:18px 18px 0 0;transform:translateY(100%);transition:transform .3s cubic-bezier(.4,0,.2,1);}
-  .dr.on{transform:translateY(0);}
-  .dr::before{content:'';display:block;width:34px;height:4px;background:var(--bd2);border-radius:2px;margin:8px auto -2px;}
-  .dr-top{padding:10px 14px 10px;}
-  .dr-foot{padding:11px 14px;padding-bottom:calc(11px + env(safe-area-inset-bottom,0px));}
-  .dr-save{padding:13px;font-size:14px;}
-  .dr-del{padding:13px;}
-  .panel{padding:14px;}
-  .panel-h{font-size:16px;}
-  /* Bottom nav */
-  .mnav{display:flex;position:fixed;bottom:0;left:0;right:0;height:64px;background:var(--sb);border-top:1px solid rgba(255,255,255,.08);z-index:50;padding-bottom:env(safe-area-inset-bottom,0px);}
-  .mnb{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;cursor:pointer;color:rgba(255,255,255,.4);transition:color .15s;font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.05em;border:none;background:transparent;font-family:'Figtree',sans-serif;}
+  .main{width:100%;}
+  .topbar{padding:0 14px;}
+  .fbar{padding:8px 14px;}
+  .content{padding:12px 14px;padding-bottom:80px;}
+  .th,.tr{display:none;}
+  .bg-body{background:transparent;border:none;border-radius:0;}
+  .mct,.mcf{display:flex;}
+  .mc-card{background:var(--white);border:1.5px solid var(--bd);border-radius:var(--rs);margin-bottom:6px;overflow:hidden;}
+  .mcb-wrap{flex-shrink:0;}
+  .mc-main{flex:1;min-width:0;cursor:pointer;margin:0 8px;}
+  .mc-name{font-size:13px;font-weight:600;color:var(--tx);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+  .mc-name.done{text-decoration:line-through;color:var(--tx3);}
+  .mc-meta{display:flex;align-items:center;gap:5px;margin-top:3px;}
+  .mc-prop{font-size:10px;font-weight:700;padding:1px 6px;border-radius:20px;}
+  .mc-edit{font-size:16px;color:var(--tx3);cursor:pointer;padding:4px;}
+  .mct{display:flex;align-items:center;gap:6px;padding:10px 12px;}
+  .mcf{align-items:center;justify-content:space-between;padding:7px 12px;border-top:1px solid var(--bd);}
+  .mcf-st .sp{font-size:11px;}
+  .mcf-days{font-size:11px;font-weight:700;padding:2px 7px;border-radius:20px;}
+  .mnav{display:flex;position:fixed;bottom:0;left:0;right:0;height:58px;background:var(--sb);border-top:1px solid rgba(255,255,255,.08);z-index:50;padding-bottom:env(safe-area-inset-bottom,0px);}
+  .mnb{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;border:none;background:none;color:rgba(255,255,255,.45);font-family:'Figtree',sans-serif;font-size:10px;font-weight:600;cursor:pointer;padding:0;}
   .mnb.on{color:#fff;}
-  .mnb-ic{font-size:19px;line-height:1;}
-  .mfab{display:flex;position:fixed;bottom:74px;right:16px;width:50px;height:50px;background:var(--blue);border-radius:50%;align-items:center;justify-content:center;font-size:24px;color:#fff;box-shadow:0 4px 16px rgba(0,115,234,.4);cursor:pointer;z-index:51;}
+  .mnb-ic{font-size:18px;line-height:1;}
+  .mfab{position:fixed;bottom:70px;right:16px;width:46px;height:46px;border-radius:50%;background:var(--blue);color:#fff;font-size:22px;border:none;cursor:pointer;box-shadow:0 3px 12px rgba(0,115,234,.4);display:flex;align-items:center;justify-content:center;z-index:51;}
 }
-@media(min-width:681px){
-  .mnav,.mfab{display:none;}
-  .mct,.mcf{display:none;}
-  .mc-main{display:none;}
-}
+@media(min-width:769px){.mnav,.mfab{display:none;}.mc-card{display:none;}}
+
 </style>
 <style id="claude-agent-animation-styles">
       @keyframes claude-pulse {
@@ -421,12 +281,10 @@ body{display:flex;height:100dvh;overflow:hidden;}
   <div class="topbar">
     <div class="tb-left">
       <div class="tb-title" id="pg-title">Master board</div>
-      <div class="tb-sub" id="pg-sub">Tap any row to edit</div>
+      <div class="sync-dot" id="sync-ind" title="Sync status"></div>
     </div>
     <div class="tb-right">
-      <span class="sync-ind" id="sync-ind" style="color: var(--red);">⚠️ Error</span>
-      <button class="btn btn-gh" onclick="toggleMod()">⚙️</button>
-      <button class="btn btn-gh" onclick="nav('upload',null)">📷</button>
+      <button class="btn btn-ghost" onclick="toggleMod()">⚙️</button>
       <button class="btn btn-pri" onclick="nav('add',null)">＋ New</button>
     </div>
   </div>
@@ -441,1059 +299,14 @@ body{display:flex;height:100dvh;overflow:hidden;}
   </div>
   <div class="content">
     <div id="v-tasks" style="display: block;">
-      <div class="stats">
-        <div class="sc"><div class="sc-bar" style="background:var(--blue)"></div><div><div class="sc-n" id="st">36</div><div class="sc-l">Total</div></div></div>
-        <div class="sc"><div class="sc-bar" style="background:var(--green)"></div><div><div class="sc-n" id="sd">0</div><div class="sc-l">Done</div></div></div>
-        <div class="sc"><div class="sc-bar" style="background:var(--org)"></div><div><div class="sc-n" id="sl">36</div><div class="sc-l">Remaining</div></div></div>
-        <div class="sc"><div class="sc-bar" style="background:var(--pur)"></div><div><div class="sc-n" id="sp">0%</div><div class="sc-l">Complete</div></div></div>
+      <div style="display:flex;align-items:center;gap:16px;padding:0 0 14px;">
+        <span style="font-size:13px;font-weight:600;color:var(--tx2);"><span id="sl" style="font-weight:800;color:var(--tx);font-size:16px;">36</span> open</span>
+        <span style="font-size:13px;font-weight:600;color:var(--tx3);">·</span>
+        <span style="font-size:13px;font-weight:600;color:var(--green);"><span id="sd" style="font-weight:800;font-size:16px;">0</span> done</span>
+        <span id="sp-wrap" style="margin-left:auto;font-size:12px;font-weight:700;color:var(--tx3);"><span id="sp">0</span>% complete</span>
+        <span id="st" style="display:none">36</span>
       </div>
-      <div id="board"><div class="grp"><div class="grp-hdr"><div class="grp-bar" style="background:#579bfc;"></div><div class="grp-name" style="color:#579bfc;">Properties</div><div class="grp-badge">0/15 done</div><div class="grp-chev">▾</div></div><div class="tbl"><div class="thead"><div class="th"></div><div class="th">Property</div><div class="th">Task</div><div class="th">Workstream</div><div class="th">Status</div><div class="th">Days open</div><div class="th"></div></div><div><div class="tr">
-    <!-- MOBILE CARD -->
-    <div class="mct">
-      <div class="mcb-wrap"><div class="cb " onclick="toggle(1,event)"><span class="ck">✓</span></div></div>
-      <div class="mc-main" onclick="openD(1)">
-        <div class="mc-name">Mass units</div>
-        <div class="mc-meta">
-          <span class="mc-prop" style="background:#579bfc18;color:#579bfc;">Bristol</span>
-          
-          
-        </div>
-      </div>
-      <span class="mc-edit" onclick="openD(1)">✎</span>
-    </div>
-    <div class="mcf">
-      <div class="mcf-st"><span class="sp" style="background:#e8eaf0;color:#5a5e78;" onclick="cycSt(1,event)">To do</span></div>
-      <span class="mcf-days" style="background:#ffe4e9;color:#8c0022;">16d</span>
-    </div>
-    <!-- DESKTOP CELLS -->
-    <div class="td td-cb"><div class="cb " onclick="toggle(1,event)"><span class="ck">✓</span></div></div>
-    <div class="td" style="">
-      <div class="pc"><div class="pn" style="color:#579bfc;"><span style="display:inline-block;width:7px;height:7px;border-radius:50%;background:#579bfc;margin-right:4px;vertical-align:middle;"></span>Bristol</div><div class="pa">Bristol, PA</div></div>
-    </div>
-    <div class="td" style="cursor:pointer;" onclick="openD(1)"><span class="tn">Mass units</span></div>
-    <div class="td" style=""><span class="wp" style="background:#579bfc18;color:#579bfc;">Construction</span></div>
-    <div class="td" style="padding:7px 9px;"><span class="sp" style="background:#e8eaf0;color:#5a5e78;" onclick="cycSt(1,event)">To do</span></div>
-    <div class="td" style="justify-content:center;"><span style="font-size:11px;font-weight:700;padding:3px 7px;border-radius:20px;background:#ffe4e9;color:#8c0022;">16d</span></div>
-    <div class="td" style="padding:0;justify-content:center;"><span class="eb" onclick="openD(1)">✎</span></div></div><div class="tr">
-    <!-- MOBILE CARD -->
-    <div class="mct">
-      <div class="mcb-wrap"><div class="cb " onclick="toggle(2,event)"><span class="ck">✓</span></div></div>
-      <div class="mc-main" onclick="openD(2)">
-        <div class="mc-name">CO + LOC release</div>
-        <div class="mc-meta">
-          <span class="mc-prop" style="background:#579bfc18;color:#579bfc;">Bristol</span>
-          
-          
-        </div>
-      </div>
-      <span class="mc-edit" onclick="openD(2)">✎</span>
-    </div>
-    <div class="mcf">
-      <div class="mcf-st"><span class="sp" style="background:#e8eaf0;color:#5a5e78;" onclick="cycSt(2,event)">To do</span></div>
-      <span class="mcf-days" style="background:#ffe4e9;color:#8c0022;">16d</span>
-    </div>
-    <!-- DESKTOP CELLS -->
-    <div class="td td-cb"><div class="cb " onclick="toggle(2,event)"><span class="ck">✓</span></div></div>
-    <div class="td" style="">
-      <div class="pc"><div class="pn" style="color:#579bfc;"><span style="display:inline-block;width:7px;height:7px;border-radius:50%;background:#579bfc;margin-right:4px;vertical-align:middle;"></span>Bristol</div><div class="pa">Bristol, PA</div></div>
-    </div>
-    <div class="td" style="cursor:pointer;" onclick="openD(2)"><span class="tn">CO + LOC release</span></div>
-    <div class="td" style=""><span class="wp" style="background:#579bfc18;color:#579bfc;">Construction</span></div>
-    <div class="td" style="padding:7px 9px;"><span class="sp" style="background:#e8eaf0;color:#5a5e78;" onclick="cycSt(2,event)">To do</span></div>
-    <div class="td" style="justify-content:center;"><span style="font-size:11px;font-weight:700;padding:3px 7px;border-radius:20px;background:#ffe4e9;color:#8c0022;">16d</span></div>
-    <div class="td" style="padding:0;justify-content:center;"><span class="eb" onclick="openD(2)">✎</span></div></div><div class="tr">
-    <!-- MOBILE CARD -->
-    <div class="mct">
-      <div class="mcb-wrap"><div class="cb " onclick="toggle(3,event)"><span class="ck">✓</span></div></div>
-      <div class="mc-main" onclick="openD(3)">
-        <div class="mc-name">Deed of dedications</div>
-        <div class="mc-meta">
-          <span class="mc-prop" style="background:#579bfc18;color:#579bfc;">Bristol</span>
-          <span style="font-size:11px;color:var(--blue);">📝</span>
-          
-        </div>
-      </div>
-      <span class="mc-edit" onclick="openD(3)">✎</span>
-    </div>
-    <div class="mcf">
-      <div class="mcf-st"><span class="sp" style="background:#e8eaf0;color:#5a5e78;" onclick="cycSt(3,event)">To do</span></div>
-      <span class="mcf-days" style="background:#ffe4e9;color:#8c0022;">16d</span>
-    </div>
-    <!-- DESKTOP CELLS -->
-    <div class="td td-cb"><div class="cb " onclick="toggle(3,event)"><span class="ck">✓</span></div></div>
-    <div class="td" style="">
-      <div class="pc"><div class="pn" style="color:#579bfc;"><span style="display:inline-block;width:7px;height:7px;border-radius:50%;background:#579bfc;margin-right:4px;vertical-align:middle;"></span>Bristol</div><div class="pa">Bristol, PA</div></div>
-    </div>
-    <div class="td" style="cursor:pointer;" onclick="openD(3)"><span class="tn">Deed of dedications</span><span class="nd"></span></div>
-    <div class="td" style=""><span class="wp" style="background:#579bfc18;color:#579bfc;">Construction</span></div>
-    <div class="td" style="padding:7px 9px;"><span class="sp" style="background:#e8eaf0;color:#5a5e78;" onclick="cycSt(3,event)">To do</span></div>
-    <div class="td" style="justify-content:center;"><span style="font-size:11px;font-weight:700;padding:3px 7px;border-radius:20px;background:#ffe4e9;color:#8c0022;">16d</span></div>
-    <div class="td" style="padding:0;justify-content:center;"><span class="eb" onclick="openD(3)">✎</span></div></div><div class="nr"><div class="nr-cell" style="">📝 Need CO before LOC</div></div><div class="tr">
-    <!-- MOBILE CARD -->
-    <div class="mct">
-      <div class="mcb-wrap"><div class="cb " onclick="toggle(4,event)"><span class="ck">✓</span></div></div>
-      <div class="mc-main" onclick="openD(4)">
-        <div class="mc-name">Unit audit</div>
-        <div class="mc-meta">
-          <span class="mc-prop" style="background:#579bfc18;color:#579bfc;">Dupont</span>
-          
-          
-        </div>
-      </div>
-      <span class="mc-edit" onclick="openD(4)">✎</span>
-    </div>
-    <div class="mcf">
-      <div class="mcf-st"><span class="sp" style="background:#e8eaf0;color:#5a5e78;" onclick="cycSt(4,event)">To do</span></div>
-      <span class="mcf-days" style="background:#ffe4e9;color:#8c0022;">16d</span>
-    </div>
-    <!-- DESKTOP CELLS -->
-    <div class="td td-cb"><div class="cb " onclick="toggle(4,event)"><span class="ck">✓</span></div></div>
-    <div class="td" style="">
-      <div class="pc"><div class="pn" style="color:#579bfc;"><span style="display:inline-block;width:7px;height:7px;border-radius:50%;background:#579bfc;margin-right:4px;vertical-align:middle;"></span>Dupont</div><div class="pa">Dupont, WA</div></div>
-    </div>
-    <div class="td" style="cursor:pointer;" onclick="openD(4)"><span class="tn">Unit audit</span></div>
-    <div class="td" style=""><span class="wp" style="background:#579bfc18;color:#579bfc;">Construction</span></div>
-    <div class="td" style="padding:7px 9px;"><span class="sp" style="background:#e8eaf0;color:#5a5e78;" onclick="cycSt(4,event)">To do</span></div>
-    <div class="td" style="justify-content:center;"><span style="font-size:11px;font-weight:700;padding:3px 7px;border-radius:20px;background:#ffe4e9;color:#8c0022;">16d</span></div>
-    <div class="td" style="padding:0;justify-content:center;"><span class="eb" onclick="openD(4)">✎</span></div></div><div class="tr">
-    <!-- MOBILE CARD -->
-    <div class="mct">
-      <div class="mcb-wrap"><div class="cb " onclick="toggle(5,event)"><span class="ck">✓</span></div></div>
-      <div class="mc-main" onclick="openD(5)">
-        <div class="mc-name">CO</div>
-        <div class="mc-meta">
-          <span class="mc-prop" style="background:#579bfc18;color:#579bfc;">Dupont</span>
-          
-          
-        </div>
-      </div>
-      <span class="mc-edit" onclick="openD(5)">✎</span>
-    </div>
-    <div class="mcf">
-      <div class="mcf-st"><span class="sp" style="background:#e8eaf0;color:#5a5e78;" onclick="cycSt(5,event)">To do</span></div>
-      <span class="mcf-days" style="background:#ffe4e9;color:#8c0022;">16d</span>
-    </div>
-    <!-- DESKTOP CELLS -->
-    <div class="td td-cb"><div class="cb " onclick="toggle(5,event)"><span class="ck">✓</span></div></div>
-    <div class="td" style="">
-      <div class="pc"><div class="pn" style="color:#579bfc;"><span style="display:inline-block;width:7px;height:7px;border-radius:50%;background:#579bfc;margin-right:4px;vertical-align:middle;"></span>Dupont</div><div class="pa">Dupont, WA</div></div>
-    </div>
-    <div class="td" style="cursor:pointer;" onclick="openD(5)"><span class="tn">CO</span></div>
-    <div class="td" style=""><span class="wp" style="background:#579bfc18;color:#579bfc;">Construction</span></div>
-    <div class="td" style="padding:7px 9px;"><span class="sp" style="background:#e8eaf0;color:#5a5e78;" onclick="cycSt(5,event)">To do</span></div>
-    <div class="td" style="justify-content:center;"><span style="font-size:11px;font-weight:700;padding:3px 7px;border-radius:20px;background:#ffe4e9;color:#8c0022;">16d</span></div>
-    <div class="td" style="padding:0;justify-content:center;"><span class="eb" onclick="openD(5)">✎</span></div></div><div class="tr">
-    <!-- MOBILE CARD -->
-    <div class="mct">
-      <div class="mcb-wrap"><div class="cb " onclick="toggle(6,event)"><span class="ck">✓</span></div></div>
-      <div class="mc-main" onclick="openD(6)">
-        <div class="mc-name">AE final pay review</div>
-        <div class="mc-meta">
-          <span class="mc-prop" style="background:#579bfc18;color:#579bfc;">Dupont</span>
-          
-          
-        </div>
-      </div>
-      <span class="mc-edit" onclick="openD(6)">✎</span>
-    </div>
-    <div class="mcf">
-      <div class="mcf-st"><span class="sp" style="background:#e8eaf0;color:#5a5e78;" onclick="cycSt(6,event)">To do</span></div>
-      <span class="mcf-days" style="background:#ffe4e9;color:#8c0022;">16d</span>
-    </div>
-    <!-- DESKTOP CELLS -->
-    <div class="td td-cb"><div class="cb " onclick="toggle(6,event)"><span class="ck">✓</span></div></div>
-    <div class="td" style="">
-      <div class="pc"><div class="pn" style="color:#579bfc;"><span style="display:inline-block;width:7px;height:7px;border-radius:50%;background:#579bfc;margin-right:4px;vertical-align:middle;"></span>Dupont</div><div class="pa">Dupont, WA</div></div>
-    </div>
-    <div class="td" style="cursor:pointer;" onclick="openD(6)"><span class="tn">AE final pay review</span></div>
-    <div class="td" style=""><span class="wp" style="background:#579bfc18;color:#579bfc;">Construction</span></div>
-    <div class="td" style="padding:7px 9px;"><span class="sp" style="background:#e8eaf0;color:#5a5e78;" onclick="cycSt(6,event)">To do</span></div>
-    <div class="td" style="justify-content:center;"><span style="font-size:11px;font-weight:700;padding:3px 7px;border-radius:20px;background:#ffe4e9;color:#8c0022;">16d</span></div>
-    <div class="td" style="padding:0;justify-content:center;"><span class="eb" onclick="openD(6)">✎</span></div></div><div class="tr">
-    <!-- MOBILE CARD -->
-    <div class="mct">
-      <div class="mcb-wrap"><div class="cb " onclick="toggle(7,event)"><span class="ck">✓</span></div></div>
-      <div class="mc-main" onclick="openD(7)">
-        <div class="mc-name">Street signage</div>
-        <div class="mc-meta">
-          <span class="mc-prop" style="background:#5dc7f718;color:#5dc7f7;">Sheldon</span>
-          
-          
-        </div>
-      </div>
-      <span class="mc-edit" onclick="openD(7)">✎</span>
-    </div>
-    <div class="mcf">
-      <div class="mcf-st"><span class="sp" style="background:#e8eaf0;color:#5a5e78;" onclick="cycSt(7,event)">To do</span></div>
-      <span class="mcf-days" style="background:#ffe4e9;color:#8c0022;">16d</span>
-    </div>
-    <!-- DESKTOP CELLS -->
-    <div class="td td-cb"><div class="cb " onclick="toggle(7,event)"><span class="ck">✓</span></div></div>
-    <div class="td" style="">
-      <div class="pc"><div class="pn" style="color:#5dc7f7;"><span style="display:inline-block;width:7px;height:7px;border-radius:50%;background:#5dc7f7;margin-right:4px;vertical-align:middle;"></span>Sheldon</div><div class="pa">Sheldon, NY</div></div>
-    </div>
-    <div class="td" style="cursor:pointer;" onclick="openD(7)"><span class="tn">Street signage</span></div>
-    <div class="td" style=""><span class="wp" style="background:#5dc7f718;color:#5dc7f7;">Construction</span></div>
-    <div class="td" style="padding:7px 9px;"><span class="sp" style="background:#e8eaf0;color:#5a5e78;" onclick="cycSt(7,event)">To do</span></div>
-    <div class="td" style="justify-content:center;"><span style="font-size:11px;font-weight:700;padding:3px 7px;border-radius:20px;background:#ffe4e9;color:#8c0022;">16d</span></div>
-    <div class="td" style="padding:0;justify-content:center;"><span class="eb" onclick="openD(7)">✎</span></div></div><div class="tr">
-    <!-- MOBILE CARD -->
-    <div class="mct">
-      <div class="mcb-wrap"><div class="cb " onclick="toggle(8,event)"><span class="ck">✓</span></div></div>
-      <div class="mc-main" onclick="openD(8)">
-        <div class="mc-name">Final sign install + reimbursement</div>
-        <div class="mc-meta">
-          <span class="mc-prop" style="background:#5dc7f718;color:#5dc7f7;">Sheldon</span>
-          
-          
-        </div>
-      </div>
-      <span class="mc-edit" onclick="openD(8)">✎</span>
-    </div>
-    <div class="mcf">
-      <div class="mcf-st"><span class="sp" style="background:#e8eaf0;color:#5a5e78;" onclick="cycSt(8,event)">To do</span></div>
-      <span class="mcf-days" style="background:#ffe4e9;color:#8c0022;">16d</span>
-    </div>
-    <!-- DESKTOP CELLS -->
-    <div class="td td-cb"><div class="cb " onclick="toggle(8,event)"><span class="ck">✓</span></div></div>
-    <div class="td" style="">
-      <div class="pc"><div class="pn" style="color:#5dc7f7;"><span style="display:inline-block;width:7px;height:7px;border-radius:50%;background:#5dc7f7;margin-right:4px;vertical-align:middle;"></span>Sheldon</div><div class="pa">Sheldon, NY</div></div>
-    </div>
-    <div class="td" style="cursor:pointer;" onclick="openD(8)"><span class="tn">Final sign install + reimbursement</span></div>
-    <div class="td" style=""><span class="wp" style="background:#5dc7f718;color:#5dc7f7;">Construction</span></div>
-    <div class="td" style="padding:7px 9px;"><span class="sp" style="background:#e8eaf0;color:#5a5e78;" onclick="cycSt(8,event)">To do</span></div>
-    <div class="td" style="justify-content:center;"><span style="font-size:11px;font-weight:700;padding:3px 7px;border-radius:20px;background:#ffe4e9;color:#8c0022;">16d</span></div>
-    <div class="td" style="padding:0;justify-content:center;"><span class="eb" onclick="openD(8)">✎</span></div></div><div class="tr">
-    <!-- MOBILE CARD -->
-    <div class="mct">
-      <div class="mcb-wrap"><div class="cb " onclick="toggle(9,event)"><span class="ck">✓</span></div></div>
-      <div class="mc-main" onclick="openD(9)">
-        <div class="mc-name">1st floor permit</div>
-        <div class="mc-meta">
-          <span class="mc-prop" style="background:#5dc7f718;color:#5dc7f7;">Balt St</span>
-          
-          
-        </div>
-      </div>
-      <span class="mc-edit" onclick="openD(9)">✎</span>
-    </div>
-    <div class="mcf">
-      <div class="mcf-st"><span class="sp" style="background:#e8eaf0;color:#5a5e78;" onclick="cycSt(9,event)">To do</span></div>
-      <span class="mcf-days" style="background:#ffe4e9;color:#8c0022;">16d</span>
-    </div>
-    <!-- DESKTOP CELLS -->
-    <div class="td td-cb"><div class="cb " onclick="toggle(9,event)"><span class="ck">✓</span></div></div>
-    <div class="td" style="">
-      <div class="pc"><div class="pn" style="color:#5dc7f7;"><span style="display:inline-block;width:7px;height:7px;border-radius:50%;background:#5dc7f7;margin-right:4px;vertical-align:middle;"></span>Balt St</div><div class="pa">Baltimore, MD</div></div>
-    </div>
-    <div class="td" style="cursor:pointer;" onclick="openD(9)"><span class="tn">1st floor permit</span></div>
-    <div class="td" style=""><span class="wp" style="background:#5dc7f718;color:#5dc7f7;">Construction</span></div>
-    <div class="td" style="padding:7px 9px;"><span class="sp" style="background:#e8eaf0;color:#5a5e78;" onclick="cycSt(9,event)">To do</span></div>
-    <div class="td" style="justify-content:center;"><span style="font-size:11px;font-weight:700;padding:3px 7px;border-radius:20px;background:#ffe4e9;color:#8c0022;">16d</span></div>
-    <div class="td" style="padding:0;justify-content:center;"><span class="eb" onclick="openD(9)">✎</span></div></div><div class="tr">
-    <!-- MOBILE CARD -->
-    <div class="mct">
-      <div class="mcb-wrap"><div class="cb " onclick="toggle(10,event)"><span class="ck">✓</span></div></div>
-      <div class="mc-main" onclick="openD(10)">
-        <div class="mc-name">Refi</div>
-        <div class="mc-meta">
-          <span class="mc-prop" style="background:#5dc7f718;color:#5dc7f7;">Balt St</span>
-          
-          
-        </div>
-      </div>
-      <span class="mc-edit" onclick="openD(10)">✎</span>
-    </div>
-    <div class="mcf">
-      <div class="mcf-st"><span class="sp" style="background:#e8eaf0;color:#5a5e78;" onclick="cycSt(10,event)">To do</span></div>
-      <span class="mcf-days" style="background:#ffe4e9;color:#8c0022;">16d</span>
-    </div>
-    <!-- DESKTOP CELLS -->
-    <div class="td td-cb"><div class="cb " onclick="toggle(10,event)"><span class="ck">✓</span></div></div>
-    <div class="td" style="">
-      <div class="pc"><div class="pn" style="color:#5dc7f7;"><span style="display:inline-block;width:7px;height:7px;border-radius:50%;background:#5dc7f7;margin-right:4px;vertical-align:middle;"></span>Balt St</div><div class="pa">Baltimore, MD</div></div>
-    </div>
-    <div class="td" style="cursor:pointer;" onclick="openD(10)"><span class="tn">Refi</span></div>
-    <div class="td" style=""><span class="wp" style="background:#5dc7f718;color:#5dc7f7;">Construction</span></div>
-    <div class="td" style="padding:7px 9px;"><span class="sp" style="background:#e8eaf0;color:#5a5e78;" onclick="cycSt(10,event)">To do</span></div>
-    <div class="td" style="justify-content:center;"><span style="font-size:11px;font-weight:700;padding:3px 7px;border-radius:20px;background:#ffe4e9;color:#8c0022;">16d</span></div>
-    <div class="td" style="padding:0;justify-content:center;"><span class="eb" onclick="openD(10)">✎</span></div></div><div class="tr">
-    <!-- MOBILE CARD -->
-    <div class="mct">
-      <div class="mcb-wrap"><div class="cb " onclick="toggle(11,event)"><span class="ck">✓</span></div></div>
-      <div class="mc-main" onclick="openD(11)">
-        <div class="mc-name">Flood zone removal</div>
-        <div class="mc-meta">
-          <span class="mc-prop" style="background:#00c87518;color:#00c875;">350 Lord</span>
-          
-          
-        </div>
-      </div>
-      <span class="mc-edit" onclick="openD(11)">✎</span>
-    </div>
-    <div class="mcf">
-      <div class="mcf-st"><span class="sp" style="background:#e8eaf0;color:#5a5e78;" onclick="cycSt(11,event)">To do</span></div>
-      <span class="mcf-days" style="background:#ffe4e9;color:#8c0022;">16d</span>
-    </div>
-    <!-- DESKTOP CELLS -->
-    <div class="td td-cb"><div class="cb " onclick="toggle(11,event)"><span class="ck">✓</span></div></div>
-    <div class="td" style="">
-      <div class="pc"><div class="pn" style="color:#00c875;"><span style="display:inline-block;width:7px;height:7px;border-radius:50%;background:#00c875;margin-right:4px;vertical-align:middle;"></span>350 Lord</div><div class="pa">350 Lord Ave</div></div>
-    </div>
-    <div class="td" style="cursor:pointer;" onclick="openD(11)"><span class="tn">Flood zone removal</span></div>
-    <div class="td" style=""><span class="wp" style="background:#00c87518;color:#00c875;">Permitting</span></div>
-    <div class="td" style="padding:7px 9px;"><span class="sp" style="background:#e8eaf0;color:#5a5e78;" onclick="cycSt(11,event)">To do</span></div>
-    <div class="td" style="justify-content:center;"><span style="font-size:11px;font-weight:700;padding:3px 7px;border-radius:20px;background:#ffe4e9;color:#8c0022;">16d</span></div>
-    <div class="td" style="padding:0;justify-content:center;"><span class="eb" onclick="openD(11)">✎</span></div></div><div class="tr">
-    <!-- MOBILE CARD -->
-    <div class="mct">
-      <div class="mcb-wrap"><div class="cb " onclick="toggle(12,event)"><span class="ck">✓</span></div></div>
-      <div class="mc-main" onclick="openD(12)">
-        <div class="mc-name">Retail lease</div>
-        <div class="mc-meta">
-          <span class="mc-prop" style="background:#00c87518;color:#00c875;">Howard 602</span>
-          
-          
-        </div>
-      </div>
-      <span class="mc-edit" onclick="openD(12)">✎</span>
-    </div>
-    <div class="mcf">
-      <div class="mcf-st"><span class="sp" style="background:#e8eaf0;color:#5a5e78;" onclick="cycSt(12,event)">To do</span></div>
-      <span class="mcf-days" style="background:#ffe4e9;color:#8c0022;">16d</span>
-    </div>
-    <!-- DESKTOP CELLS -->
-    <div class="td td-cb"><div class="cb " onclick="toggle(12,event)"><span class="ck">✓</span></div></div>
-    <div class="td" style="">
-      <div class="pc"><div class="pn" style="color:#00c875;"><span style="display:inline-block;width:7px;height:7px;border-radius:50%;background:#00c875;margin-right:4px;vertical-align:middle;"></span>Howard 602</div><div class="pa">602 Howard St, Baltimore</div></div>
-    </div>
-    <div class="td" style="cursor:pointer;" onclick="openD(12)"><span class="tn">Retail lease</span></div>
-    <div class="td" style=""><span class="wp" style="background:#00c87518;color:#00c875;">Leasing</span></div>
-    <div class="td" style="padding:7px 9px;"><span class="sp" style="background:#e8eaf0;color:#5a5e78;" onclick="cycSt(12,event)">To do</span></div>
-    <div class="td" style="justify-content:center;"><span style="font-size:11px;font-weight:700;padding:3px 7px;border-radius:20px;background:#ffe4e9;color:#8c0022;">16d</span></div>
-    <div class="td" style="padding:0;justify-content:center;"><span class="eb" onclick="openD(12)">✎</span></div></div><div class="tr">
-    <!-- MOBILE CARD -->
-    <div class="mct">
-      <div class="mcb-wrap"><div class="cb " onclick="toggle(13,event)"><span class="ck">✓</span></div></div>
-      <div class="mc-main" onclick="openD(13)">
-        <div class="mc-name">Sign install then reimburse</div>
-        <div class="mc-meta">
-          <span class="mc-prop" style="background:#27b89c18;color:#27b89c;">PG Mall</span>
-          
-          
-        </div>
-      </div>
-      <span class="mc-edit" onclick="openD(13)">✎</span>
-    </div>
-    <div class="mcf">
-      <div class="mcf-st"><span class="sp" style="background:#e8eaf0;color:#5a5e78;" onclick="cycSt(13,event)">To do</span></div>
-      <span class="mcf-days" style="background:#ffe4e9;color:#8c0022;">16d</span>
-    </div>
-    <!-- DESKTOP CELLS -->
-    <div class="td td-cb"><div class="cb " onclick="toggle(13,event)"><span class="ck">✓</span></div></div>
-    <div class="td" style="">
-      <div class="pc"><div class="pn" style="color:#27b89c;"><span style="display:inline-block;width:7px;height:7px;border-radius:50%;background:#27b89c;margin-right:4px;vertical-align:middle;"></span>PG Mall</div><div class="pa">Prince George's County</div></div>
-    </div>
-    <div class="td" style="cursor:pointer;" onclick="openD(13)"><span class="tn">Sign install then reimburse</span></div>
-    <div class="td" style=""><span class="wp" style="background:#27b89c18;color:#27b89c;">Operations</span></div>
-    <div class="td" style="padding:7px 9px;"><span class="sp" style="background:#e8eaf0;color:#5a5e78;" onclick="cycSt(13,event)">To do</span></div>
-    <div class="td" style="justify-content:center;"><span style="font-size:11px;font-weight:700;padding:3px 7px;border-radius:20px;background:#ffe4e9;color:#8c0022;">16d</span></div>
-    <div class="td" style="padding:0;justify-content:center;"><span class="eb" onclick="openD(13)">✎</span></div></div><div class="tr">
-    <!-- MOBILE CARD -->
-    <div class="mct">
-      <div class="mcb-wrap"><div class="cb " onclick="toggle(14,event)"><span class="ck">✓</span></div></div>
-      <div class="mc-main" onclick="openD(14)">
-        <div class="mc-name">Weekly check w/ Kyle</div>
-        <div class="mc-meta">
-          <span class="mc-prop" style="background:#27b89c18;color:#27b89c;">PG Mall</span>
-          
-          
-        </div>
-      </div>
-      <span class="mc-edit" onclick="openD(14)">✎</span>
-    </div>
-    <div class="mcf">
-      <div class="mcf-st"><span class="sp" style="background:#e8eaf0;color:#5a5e78;" onclick="cycSt(14,event)">To do</span></div>
-      <span class="mcf-days" style="background:#ffe4e9;color:#8c0022;">16d</span>
-    </div>
-    <!-- DESKTOP CELLS -->
-    <div class="td td-cb"><div class="cb " onclick="toggle(14,event)"><span class="ck">✓</span></div></div>
-    <div class="td" style="">
-      <div class="pc"><div class="pn" style="color:#27b89c;"><span style="display:inline-block;width:7px;height:7px;border-radius:50%;background:#27b89c;margin-right:4px;vertical-align:middle;"></span>PG Mall</div><div class="pa">Prince George's County</div></div>
-    </div>
-    <div class="td" style="cursor:pointer;" onclick="openD(14)"><span class="tn">Weekly check w/ Kyle</span></div>
-    <div class="td" style=""><span class="wp" style="background:#27b89c18;color:#27b89c;">Operations</span></div>
-    <div class="td" style="padding:7px 9px;"><span class="sp" style="background:#e8eaf0;color:#5a5e78;" onclick="cycSt(14,event)">To do</span></div>
-    <div class="td" style="justify-content:center;"><span style="font-size:11px;font-weight:700;padding:3px 7px;border-radius:20px;background:#ffe4e9;color:#8c0022;">16d</span></div>
-    <div class="td" style="padding:0;justify-content:center;"><span class="eb" onclick="openD(14)">✎</span></div></div><div class="tr">
-    <!-- MOBILE CARD -->
-    <div class="mct">
-      <div class="mcb-wrap"><div class="cb " onclick="toggle(15,event)"><span class="ck">✓</span></div></div>
-      <div class="mc-main" onclick="openD(15)">
-        <div class="mc-name">Fundraise</div>
-        <div class="mc-meta">
-          <span class="mc-prop" style="background:#27b89c18;color:#27b89c;">Egg Harbor</span>
-          
-          
-        </div>
-      </div>
-      <span class="mc-edit" onclick="openD(15)">✎</span>
-    </div>
-    <div class="mcf">
-      <div class="mcf-st"><span class="sp" style="background:#e8eaf0;color:#5a5e78;" onclick="cycSt(15,event)">To do</span></div>
-      <span class="mcf-days" style="background:#ffe4e9;color:#8c0022;">16d</span>
-    </div>
-    <!-- DESKTOP CELLS -->
-    <div class="td td-cb"><div class="cb " onclick="toggle(15,event)"><span class="ck">✓</span></div></div>
-    <div class="td" style="">
-      <div class="pc"><div class="pn" style="color:#27b89c;"><span style="display:inline-block;width:7px;height:7px;border-radius:50%;background:#27b89c;margin-right:4px;vertical-align:middle;"></span>Egg Harbor</div><div class="pa">Egg Harbor, NJ</div></div>
-    </div>
-    <div class="td" style="cursor:pointer;" onclick="openD(15)"><span class="tn">Fundraise</span></div>
-    <div class="td" style=""><span class="wp" style="background:#27b89c18;color:#27b89c;">Development</span></div>
-    <div class="td" style="padding:7px 9px;"><span class="sp" style="background:#e8eaf0;color:#5a5e78;" onclick="cycSt(15,event)">To do</span></div>
-    <div class="td" style="justify-content:center;"><span style="font-size:11px;font-weight:700;padding:3px 7px;border-radius:20px;background:#ffe4e9;color:#8c0022;">16d</span></div>
-    <div class="td" style="padding:0;justify-content:center;"><span class="eb" onclick="openD(15)">✎</span></div></div></div><div class="add-row"><span style="font-size:15px;">+</span> Add item</div></div></div><div class="grp"><div class="grp-hdr"><div class="grp-bar" style="background:#a25ddc;"></div><div class="grp-name" style="color:#a25ddc;">Licensing</div><div class="grp-badge">0/4 done</div><div class="grp-chev">▾</div></div><div class="tbl"><div class="thead"><div class="th"></div><div class="th">Property</div><div class="th">Task</div><div class="th">Workstream</div><div class="th">Status</div><div class="th">Days open</div><div class="th"></div></div><div><div class="tr">
-    <!-- MOBILE CARD -->
-    <div class="mct">
-      <div class="mcb-wrap"><div class="cb " onclick="toggle(16,event)"><span class="ck">✓</span></div></div>
-      <div class="mc-main" onclick="openD(16)">
-        <div class="mc-name">HI GC license — complete app</div>
-        <div class="mc-meta">
-          <span class="mc-prop" style="background:#a25ddc18;color:#a25ddc;">Licensing</span>
-          
-          
-        </div>
-      </div>
-      <span class="mc-edit" onclick="openD(16)">✎</span>
-    </div>
-    <div class="mcf">
-      <div class="mcf-st"><span class="sp" style="background:#e8eaf0;color:#5a5e78;" onclick="cycSt(16,event)">To do</span></div>
-      <span class="mcf-days" style="background:#ffe4e9;color:#8c0022;">16d</span>
-    </div>
-    <!-- DESKTOP CELLS -->
-    <div class="td td-cb"><div class="cb " onclick="toggle(16,event)"><span class="ck">✓</span></div></div>
-    <div class="td" style="">
-      <div class="pc"><div class="pn" style="color:#a25ddc;"><span style="display:inline-block;width:7px;height:7px;border-radius:50%;background:#a25ddc;margin-right:4px;vertical-align:middle;"></span>Licensing</div><div class="pa">Multi-state GC licensing</div></div>
-    </div>
-    <div class="td" style="cursor:pointer;" onclick="openD(16)"><span class="tn">HI GC license — complete app</span></div>
-    <div class="td" style=""><span class="wp" style="background:#a25ddc18;color:#a25ddc;">Licensing</span></div>
-    <div class="td" style="padding:7px 9px;"><span class="sp" style="background:#e8eaf0;color:#5a5e78;" onclick="cycSt(16,event)">To do</span></div>
-    <div class="td" style="justify-content:center;"><span style="font-size:11px;font-weight:700;padding:3px 7px;border-radius:20px;background:#ffe4e9;color:#8c0022;">16d</span></div>
-    <div class="td" style="padding:0;justify-content:center;"><span class="eb" onclick="openD(16)">✎</span></div></div><div class="tr">
-    <!-- MOBILE CARD -->
-    <div class="mct">
-      <div class="mcb-wrap"><div class="cb " onclick="toggle(17,event)"><span class="ck">✓</span></div></div>
-      <div class="mc-main" onclick="openD(17)">
-        <div class="mc-name">RI GC license — make license req list</div>
-        <div class="mc-meta">
-          <span class="mc-prop" style="background:#a25ddc18;color:#a25ddc;">Licensing</span>
-          
-          
-        </div>
-      </div>
-      <span class="mc-edit" onclick="openD(17)">✎</span>
-    </div>
-    <div class="mcf">
-      <div class="mcf-st"><span class="sp" style="background:#e8eaf0;color:#5a5e78;" onclick="cycSt(17,event)">To do</span></div>
-      <span class="mcf-days" style="background:#ffe4e9;color:#8c0022;">16d</span>
-    </div>
-    <!-- DESKTOP CELLS -->
-    <div class="td td-cb"><div class="cb " onclick="toggle(17,event)"><span class="ck">✓</span></div></div>
-    <div class="td" style="">
-      <div class="pc"><div class="pn" style="color:#a25ddc;"><span style="display:inline-block;width:7px;height:7px;border-radius:50%;background:#a25ddc;margin-right:4px;vertical-align:middle;"></span>Licensing</div><div class="pa">Multi-state GC licensing</div></div>
-    </div>
-    <div class="td" style="cursor:pointer;" onclick="openD(17)"><span class="tn">RI GC license — make license req list</span></div>
-    <div class="td" style=""><span class="wp" style="background:#a25ddc18;color:#a25ddc;">Licensing</span></div>
-    <div class="td" style="padding:7px 9px;"><span class="sp" style="background:#e8eaf0;color:#5a5e78;" onclick="cycSt(17,event)">To do</span></div>
-    <div class="td" style="justify-content:center;"><span style="font-size:11px;font-weight:700;padding:3px 7px;border-radius:20px;background:#ffe4e9;color:#8c0022;">16d</span></div>
-    <div class="td" style="padding:0;justify-content:center;"><span class="eb" onclick="openD(17)">✎</span></div></div><div class="tr">
-    <!-- MOBILE CARD -->
-    <div class="mct">
-      <div class="mcb-wrap"><div class="cb " onclick="toggle(18,event)"><span class="ck">✓</span></div></div>
-      <div class="mc-main" onclick="openD(18)">
-        <div class="mc-name">FL GC license renew — 6 hour class</div>
-        <div class="mc-meta">
-          <span class="mc-prop" style="background:#a25ddc18;color:#a25ddc;">Licensing</span>
-          
-          
-        </div>
-      </div>
-      <span class="mc-edit" onclick="openD(18)">✎</span>
-    </div>
-    <div class="mcf">
-      <div class="mcf-st"><span class="sp" style="background:#e8eaf0;color:#5a5e78;" onclick="cycSt(18,event)">To do</span></div>
-      <span class="mcf-days" style="background:#ffe4e9;color:#8c0022;">16d</span>
-    </div>
-    <!-- DESKTOP CELLS -->
-    <div class="td td-cb"><div class="cb " onclick="toggle(18,event)"><span class="ck">✓</span></div></div>
-    <div class="td" style="">
-      <div class="pc"><div class="pn" style="color:#a25ddc;"><span style="display:inline-block;width:7px;height:7px;border-radius:50%;background:#a25ddc;margin-right:4px;vertical-align:middle;"></span>Licensing</div><div class="pa">Multi-state GC licensing</div></div>
-    </div>
-    <div class="td" style="cursor:pointer;" onclick="openD(18)"><span class="tn">FL GC license renew — 6 hour class</span></div>
-    <div class="td" style=""><span class="wp" style="background:#a25ddc18;color:#a25ddc;">Licensing</span></div>
-    <div class="td" style="padding:7px 9px;"><span class="sp" style="background:#e8eaf0;color:#5a5e78;" onclick="cycSt(18,event)">To do</span></div>
-    <div class="td" style="justify-content:center;"><span style="font-size:11px;font-weight:700;padding:3px 7px;border-radius:20px;background:#ffe4e9;color:#8c0022;">16d</span></div>
-    <div class="td" style="padding:0;justify-content:center;"><span class="eb" onclick="openD(18)">✎</span></div></div><div class="tr">
-    <!-- MOBILE CARD -->
-    <div class="mct">
-      <div class="mcb-wrap"><div class="cb " onclick="toggle(28,event)"><span class="ck">✓</span></div></div>
-      <div class="mc-main" onclick="openD(28)">
-        <div class="mc-name">HI Contracts — 2 proposals from Angel (labor + materials per project)</div>
-        <div class="mc-meta">
-          <span class="mc-prop" style="background:#a25ddc18;color:#a25ddc;">Licensing</span>
-          <span style="font-size:11px;color:var(--blue);">📝</span>
-          
-        </div>
-      </div>
-      <span class="mc-edit" onclick="openD(28)">✎</span>
-    </div>
-    <div class="mcf">
-      <div class="mcf-st"><span class="sp" style="background:#e8eaf0;color:#5a5e78;" onclick="cycSt(28,event)">To do</span></div>
-      <span class="mcf-days" style="background:#d7f7e8;color:#005735;">Today</span>
-    </div>
-    <!-- DESKTOP CELLS -->
-    <div class="td td-cb"><div class="cb " onclick="toggle(28,event)"><span class="ck">✓</span></div></div>
-    <div class="td" style="">
-      <div class="pc"><div class="pn" style="color:#a25ddc;"><span style="display:inline-block;width:7px;height:7px;border-radius:50%;background:#a25ddc;margin-right:4px;vertical-align:middle;"></span>Licensing</div><div class="pa">Multi-state GC licensing</div></div>
-    </div>
-    <div class="td" style="cursor:pointer;" onclick="openD(28)"><span class="tn">HI Contracts — 2 proposals from Angel (labor + materials per project)</span><span class="nd"></span></div>
-    <div class="td" style=""><span class="wp" style="background:#a25ddc18;color:#a25ddc;">Licensing</span></div>
-    <div class="td" style="padding:7px 9px;"><span class="sp" style="background:#e8eaf0;color:#5a5e78;" onclick="cycSt(28,event)">To do</span></div>
-    <div class="td" style="justify-content:center;"><span style="font-size:11px;font-weight:700;padding:3px 7px;border-radius:20px;background:#d7f7e8;color:#005735;">Today</span></div>
-    <div class="td" style="padding:0;justify-content:center;"><span class="eb" onclick="openD(28)">✎</span></div></div><div class="nr"><div class="nr-cell" style="">📝 Email Apr 11 to Angel Navas @ StorageXpress. Materials from Storage Xpress, labor from local HI partner. Honolulu Builders OK with non-union.</div></div></div><div class="add-row"><span style="font-size:15px;">+</span> Add item</div></div></div><div class="grp"><div class="grp-hdr"><div class="grp-bar" style="background:#fdab3d;"></div><div class="grp-name" style="color:#fdab3d;">Finance</div><div class="grp-badge">0/8 done</div><div class="grp-chev">▾</div></div><div class="tbl"><div class="thead"><div class="th"></div><div class="th">Property</div><div class="th">Task</div><div class="th">Workstream</div><div class="th">Status</div><div class="th">Days open</div><div class="th"></div></div><div><div class="tr">
-    <!-- MOBILE CARD -->
-    <div class="mct">
-      <div class="mcb-wrap"><div class="cb " onclick="toggle(19,event)"><span class="ck">✓</span></div></div>
-      <div class="mc-main" onclick="openD(19)">
-        <div class="mc-name">BH tax return — 25 expense list</div>
-        <div class="mc-meta">
-          <span class="mc-prop" style="background:#fdab3d18;color:#fdab3d;">Finance</span>
-          
-          
-        </div>
-      </div>
-      <span class="mc-edit" onclick="openD(19)">✎</span>
-    </div>
-    <div class="mcf">
-      <div class="mcf-st"><span class="sp" style="background:#e8eaf0;color:#5a5e78;" onclick="cycSt(19,event)">To do</span></div>
-      <span class="mcf-days" style="background:#ffe4e9;color:#8c0022;">16d</span>
-    </div>
-    <!-- DESKTOP CELLS -->
-    <div class="td td-cb"><div class="cb " onclick="toggle(19,event)"><span class="ck">✓</span></div></div>
-    <div class="td" style="">
-      <div class="pc"><div class="pn" style="color:#fdab3d;"><span style="display:inline-block;width:7px;height:7px;border-radius:50%;background:#fdab3d;margin-right:4px;vertical-align:middle;"></span>Finance</div><div class="pa">Accounting &amp; banking</div></div>
-    </div>
-    <div class="td" style="cursor:pointer;" onclick="openD(19)"><span class="tn">BH tax return — 25 expense list</span></div>
-    <div class="td" style=""><span class="wp" style="background:#fdab3d18;color:#fdab3d;">Finance</span></div>
-    <div class="td" style="padding:7px 9px;"><span class="sp" style="background:#e8eaf0;color:#5a5e78;" onclick="cycSt(19,event)">To do</span></div>
-    <div class="td" style="justify-content:center;"><span style="font-size:11px;font-weight:700;padding:3px 7px;border-radius:20px;background:#ffe4e9;color:#8c0022;">16d</span></div>
-    <div class="td" style="padding:0;justify-content:center;"><span class="eb" onclick="openD(19)">✎</span></div></div><div class="tr">
-    <!-- MOBILE CARD -->
-    <div class="mct">
-      <div class="mcb-wrap"><div class="cb " onclick="toggle(20,event)"><span class="ck">✓</span></div></div>
-      <div class="mc-main" onclick="openD(20)">
-        <div class="mc-name">AM accounting Fed</div>
-        <div class="mc-meta">
-          <span class="mc-prop" style="background:#fdab3d18;color:#fdab3d;">Finance</span>
-          
-          
-        </div>
-      </div>
-      <span class="mc-edit" onclick="openD(20)">✎</span>
-    </div>
-    <div class="mcf">
-      <div class="mcf-st"><span class="sp" style="background:#e8eaf0;color:#5a5e78;" onclick="cycSt(20,event)">To do</span></div>
-      <span class="mcf-days" style="background:#ffe4e9;color:#8c0022;">16d</span>
-    </div>
-    <!-- DESKTOP CELLS -->
-    <div class="td td-cb"><div class="cb " onclick="toggle(20,event)"><span class="ck">✓</span></div></div>
-    <div class="td" style="">
-      <div class="pc"><div class="pn" style="color:#fdab3d;"><span style="display:inline-block;width:7px;height:7px;border-radius:50%;background:#fdab3d;margin-right:4px;vertical-align:middle;"></span>Finance</div><div class="pa">Accounting &amp; banking</div></div>
-    </div>
-    <div class="td" style="cursor:pointer;" onclick="openD(20)"><span class="tn">AM accounting Fed</span></div>
-    <div class="td" style=""><span class="wp" style="background:#fdab3d18;color:#fdab3d;">Finance</span></div>
-    <div class="td" style="padding:7px 9px;"><span class="sp" style="background:#e8eaf0;color:#5a5e78;" onclick="cycSt(20,event)">To do</span></div>
-    <div class="td" style="justify-content:center;"><span style="font-size:11px;font-weight:700;padding:3px 7px;border-radius:20px;background:#ffe4e9;color:#8c0022;">16d</span></div>
-    <div class="td" style="padding:0;justify-content:center;"><span class="eb" onclick="openD(20)">✎</span></div></div><div class="tr">
-    <!-- MOBILE CARD -->
-    <div class="mct">
-      <div class="mcb-wrap"><div class="cb " onclick="toggle(21,event)"><span class="ck">✓</span></div></div>
-      <div class="mc-main" onclick="openD(21)">
-        <div class="mc-name">W Bay EXP updated UW</div>
-        <div class="mc-meta">
-          <span class="mc-prop" style="background:#fdab3d18;color:#fdab3d;">Finance</span>
-          <span style="font-size:11px;color:var(--blue);">📝</span>
-          
-        </div>
-      </div>
-      <span class="mc-edit" onclick="openD(21)">✎</span>
-    </div>
-    <div class="mcf">
-      <div class="mcf-st"><span class="sp" style="background:#fdab3d;color:#fff;" onclick="cycSt(21,event)">Working on it</span></div>
-      <span class="mcf-days" style="background:#ffe4e9;color:#8c0022;">16d</span>
-    </div>
-    <!-- DESKTOP CELLS -->
-    <div class="td td-cb"><div class="cb " onclick="toggle(21,event)"><span class="ck">✓</span></div></div>
-    <div class="td" style="">
-      <div class="pc"><div class="pn" style="color:#fdab3d;"><span style="display:inline-block;width:7px;height:7px;border-radius:50%;background:#fdab3d;margin-right:4px;vertical-align:middle;"></span>Finance</div><div class="pa">Accounting &amp; banking</div></div>
-    </div>
-    <div class="td" style="cursor:pointer;" onclick="openD(21)"><span class="tn">W Bay EXP updated UW</span><span class="nd"></span></div>
-    <div class="td" style=""><span class="wp" style="background:#fdab3d18;color:#fdab3d;">Finance</span></div>
-    <div class="td" style="padding:7px 9px;"><span class="sp" style="background:#fdab3d;color:#fff;" onclick="cycSt(21,event)">Working on it</span></div>
-    <div class="td" style="justify-content:center;"><span style="font-size:11px;font-weight:700;padding:3px 7px;border-radius:20px;background:#ffe4e9;color:#8c0022;">16d</span></div>
-    <div class="td" style="padding:0;justify-content:center;"><span class="eb" onclick="openD(21)">✎</span></div></div><div class="nr"><div class="nr-cell" style="">📝 In progress</div></div><div class="tr">
-    <!-- MOBILE CARD -->
-    <div class="mct">
-      <div class="mcb-wrap"><div class="cb " onclick="toggle(22,event)"><span class="ck">✓</span></div></div>
-      <div class="mc-main" onclick="openD(22)">
-        <div class="mc-name">PSG Amex — call w/ Tyler</div>
-        <div class="mc-meta">
-          <span class="mc-prop" style="background:#fdab3d18;color:#fdab3d;">Finance</span>
-          
-          
-        </div>
-      </div>
-      <span class="mc-edit" onclick="openD(22)">✎</span>
-    </div>
-    <div class="mcf">
-      <div class="mcf-st"><span class="sp" style="background:#e8eaf0;color:#5a5e78;" onclick="cycSt(22,event)">To do</span></div>
-      <span class="mcf-days" style="background:#ffe4e9;color:#8c0022;">16d</span>
-    </div>
-    <!-- DESKTOP CELLS -->
-    <div class="td td-cb"><div class="cb " onclick="toggle(22,event)"><span class="ck">✓</span></div></div>
-    <div class="td" style="">
-      <div class="pc"><div class="pn" style="color:#fdab3d;"><span style="display:inline-block;width:7px;height:7px;border-radius:50%;background:#fdab3d;margin-right:4px;vertical-align:middle;"></span>Finance</div><div class="pa">Accounting &amp; banking</div></div>
-    </div>
-    <div class="td" style="cursor:pointer;" onclick="openD(22)"><span class="tn">PSG Amex — call w/ Tyler</span></div>
-    <div class="td" style=""><span class="wp" style="background:#fdab3d18;color:#fdab3d;">Finance</span></div>
-    <div class="td" style="padding:7px 9px;"><span class="sp" style="background:#e8eaf0;color:#5a5e78;" onclick="cycSt(22,event)">To do</span></div>
-    <div class="td" style="justify-content:center;"><span style="font-size:11px;font-weight:700;padding:3px 7px;border-radius:20px;background:#ffe4e9;color:#8c0022;">16d</span></div>
-    <div class="td" style="padding:0;justify-content:center;"><span class="eb" onclick="openD(22)">✎</span></div></div><div class="tr">
-    <!-- MOBILE CARD -->
-    <div class="mct">
-      <div class="mcb-wrap"><div class="cb " onclick="toggle(29,event)"><span class="ck">✓</span></div></div>
-      <div class="mc-main" onclick="openD(29)">
-        <div class="mc-name">Cedarville Draw #10 — answer Nuveen questions 2b &amp; 2c</div>
-        <div class="mc-meta">
-          <span class="mc-prop" style="background:#fdab3d18;color:#fdab3d;">Finance</span>
-          <span style="font-size:11px;color:var(--blue);">📝</span>
-          
-        </div>
-      </div>
-      <span class="mc-edit" onclick="openD(29)">✎</span>
-    </div>
-    <div class="mcf">
-      <div class="mcf-st"><span class="sp" style="background:#e8eaf0;color:#5a5e78;" onclick="cycSt(29,event)">To do</span></div>
-      <span class="mcf-days" style="background:#d7f7e8;color:#005735;">Today</span>
-    </div>
-    <!-- DESKTOP CELLS -->
-    <div class="td td-cb"><div class="cb " onclick="toggle(29,event)"><span class="ck">✓</span></div></div>
-    <div class="td" style="">
-      <div class="pc"><div class="pn" style="color:#fdab3d;"><span style="display:inline-block;width:7px;height:7px;border-radius:50%;background:#fdab3d;margin-right:4px;vertical-align:middle;"></span>Finance</div><div class="pa">Accounting &amp; banking</div></div>
-    </div>
-    <div class="td" style="cursor:pointer;" onclick="openD(29)"><span class="tn">Cedarville Draw #10 — answer Nuveen questions 2b &amp; 2c</span><span class="nd"></span></div>
-    <div class="td" style=""><span class="wp" style="background:#fdab3d18;color:#fdab3d;">Finance</span></div>
-    <div class="td" style="padding:7px 9px;"><span class="sp" style="background:#e8eaf0;color:#5a5e78;" onclick="cycSt(29,event)">To do</span></div>
-    <div class="td" style="justify-content:center;"><span style="font-size:11px;font-weight:700;padding:3px 7px;border-radius:20px;background:#d7f7e8;color:#005735;">Today</span></div>
-    <div class="td" style="padding:0;justify-content:center;"><span class="eb" onclick="openD(29)">✎</span></div></div><div class="nr"><div class="nr-cell" style="">📝 Mohsin flagging from Connor Goff @ Nuveen. NVS/Storage Express connection + materials on-site status + install timeline.</div></div><div class="tr">
-    <!-- MOBILE CARD -->
-    <div class="mct">
-      <div class="mcb-wrap"><div class="cb " onclick="toggle(32,event)"><span class="ck">✓</span></div></div>
-      <div class="mc-main" onclick="openD(32)">
-        <div class="mc-name">Connect with Brad Noble re: property insurance intro</div>
-        <div class="mc-meta">
-          <span class="mc-prop" style="background:#fdab3d18;color:#fdab3d;">Finance</span>
-          <span style="font-size:11px;color:var(--blue);">📝</span>
-          
-        </div>
-      </div>
-      <span class="mc-edit" onclick="openD(32)">✎</span>
-    </div>
-    <div class="mcf">
-      <div class="mcf-st"><span class="sp" style="background:#e8eaf0;color:#5a5e78;" onclick="cycSt(32,event)">To do</span></div>
-      <span class="mcf-days" style="background:#d7f7e8;color:#005735;">Today</span>
-    </div>
-    <!-- DESKTOP CELLS -->
-    <div class="td td-cb"><div class="cb " onclick="toggle(32,event)"><span class="ck">✓</span></div></div>
-    <div class="td" style="">
-      <div class="pc"><div class="pn" style="color:#fdab3d;"><span style="display:inline-block;width:7px;height:7px;border-radius:50%;background:#fdab3d;margin-right:4px;vertical-align:middle;"></span>Finance</div><div class="pa">Accounting &amp; banking</div></div>
-    </div>
-    <div class="td" style="cursor:pointer;" onclick="openD(32)"><span class="tn">Connect with Brad Noble re: property insurance intro</span><span class="nd"></span></div>
-    <div class="td" style=""><span class="wp" style="background:#fdab3d18;color:#fdab3d;">Finance</span></div>
-    <div class="td" style="padding:7px 9px;"><span class="sp" style="background:#e8eaf0;color:#5a5e78;" onclick="cycSt(32,event)">To do</span></div>
-    <div class="td" style="justify-content:center;"><span style="font-size:11px;font-weight:700;padding:3px 7px;border-radius:20px;background:#d7f7e8;color:#005735;">Today</span></div>
-    <div class="td" style="padding:0;justify-content:center;"><span class="eb" onclick="openD(32)">✎</span></div></div><div class="nr"><div class="nr-cell" style="">📝 Intro from Jeff Mariottini. Brad Noble @ Noble Property Insurance.</div></div><div class="tr">
-    <!-- MOBILE CARD -->
-    <div class="mct">
-      <div class="mcb-wrap"><div class="cb " onclick="toggle(35,event)"><span class="ck">✓</span></div></div>
-      <div class="mc-main" onclick="openD(35)">
-        <div class="mc-name">Investigate double payment to Ryan — fix process &amp; cost codes</div>
-        <div class="mc-meta">
-          <span class="mc-prop" style="background:#fdab3d18;color:#fdab3d;">Finance</span>
-          <span style="font-size:11px;color:var(--blue);">📝</span>
-          
-        </div>
-      </div>
-      <span class="mc-edit" onclick="openD(35)">✎</span>
-    </div>
-    <div class="mcf">
-      <div class="mcf-st"><span class="sp" style="background:#e8eaf0;color:#5a5e78;" onclick="cycSt(35,event)">To do</span></div>
-      <span class="mcf-days" style="background:#d7f7e8;color:#005735;">Today</span>
-    </div>
-    <!-- DESKTOP CELLS -->
-    <div class="td td-cb"><div class="cb " onclick="toggle(35,event)"><span class="ck">✓</span></div></div>
-    <div class="td" style="">
-      <div class="pc"><div class="pn" style="color:#fdab3d;"><span style="display:inline-block;width:7px;height:7px;border-radius:50%;background:#fdab3d;margin-right:4px;vertical-align:middle;"></span>Finance</div><div class="pa">Accounting &amp; banking</div></div>
-    </div>
-    <div class="td" style="cursor:pointer;" onclick="openD(35)"><span class="tn">Investigate double payment to Ryan — fix process &amp; cost codes</span><span class="nd"></span></div>
-    <div class="td" style=""><span class="wp" style="background:#fdab3d18;color:#fdab3d;">Finance</span></div>
-    <div class="td" style="padding:7px 9px;"><span class="sp" style="background:#e8eaf0;color:#5a5e78;" onclick="cycSt(35,event)">To do</span></div>
-    <div class="td" style="justify-content:center;"><span style="font-size:11px;font-weight:700;padding:3px 7px;border-radius:20px;background:#d7f7e8;color:#005735;">Today</span></div>
-    <div class="td" style="padding:0;justify-content:center;"><span class="eb" onclick="openD(35)">✎</span></div></div><div class="nr"><div class="nr-cell" style="">📝 Beth flagged in Teams. Cost code fix with Kirill in June.</div></div><div class="tr">
-    <!-- MOBILE CARD -->
-    <div class="mct">
-      <div class="mcb-wrap"><div class="cb " onclick="toggle(36,event)"><span class="ck">✓</span></div></div>
-      <div class="mc-main" onclick="openD(36)">
-        <div class="mc-name">Trace March ACH — confirm approval trail with Beth + bank</div>
-        <div class="mc-meta">
-          <span class="mc-prop" style="background:#fdab3d18;color:#fdab3d;">Finance</span>
-          <span style="font-size:11px;color:var(--blue);">📝</span>
-          
-        </div>
-      </div>
-      <span class="mc-edit" onclick="openD(36)">✎</span>
-    </div>
-    <div class="mcf">
-      <div class="mcf-st"><span class="sp" style="background:#e8eaf0;color:#5a5e78;" onclick="cycSt(36,event)">To do</span></div>
-      <span class="mcf-days" style="background:#d7f7e8;color:#005735;">Today</span>
-    </div>
-    <!-- DESKTOP CELLS -->
-    <div class="td td-cb"><div class="cb " onclick="toggle(36,event)"><span class="ck">✓</span></div></div>
-    <div class="td" style="">
-      <div class="pc"><div class="pn" style="color:#fdab3d;"><span style="display:inline-block;width:7px;height:7px;border-radius:50%;background:#fdab3d;margin-right:4px;vertical-align:middle;"></span>Finance</div><div class="pa">Accounting &amp; banking</div></div>
-    </div>
-    <div class="td" style="cursor:pointer;" onclick="openD(36)"><span class="tn">Trace March ACH — confirm approval trail with Beth + bank</span><span class="nd"></span></div>
-    <div class="td" style=""><span class="wp" style="background:#fdab3d18;color:#fdab3d;">Finance</span></div>
-    <div class="td" style="padding:7px 9px;"><span class="sp" style="background:#e8eaf0;color:#5a5e78;" onclick="cycSt(36,event)">To do</span></div>
-    <div class="td" style="justify-content:center;"><span style="font-size:11px;font-weight:700;padding:3px 7px;border-radius:20px;background:#d7f7e8;color:#005735;">Today</span></div>
-    <div class="td" style="padding:0;justify-content:center;"><span class="eb" onclick="openD(36)">✎</span></div></div><div class="nr"><div class="nr-cell" style="">📝 Beth emailed bank. No approval email found. Awaiting response.</div></div></div><div class="add-row"><span style="font-size:15px;">+</span> Add item</div></div></div><div class="grp"><div class="grp-hdr"><div class="grp-bar" style="background:#e2445c;"></div><div class="grp-name" style="color:#e2445c;">Legal</div><div class="grp-badge">0/2 done</div><div class="grp-chev">▾</div></div><div class="tbl"><div class="thead"><div class="th"></div><div class="th">Property</div><div class="th">Task</div><div class="th">Workstream</div><div class="th">Status</div><div class="th">Days open</div><div class="th"></div></div><div><div class="tr">
-    <!-- MOBILE CARD -->
-    <div class="mct">
-      <div class="mcb-wrap"><div class="cb " onclick="toggle(23,event)"><span class="ck">✓</span></div></div>
-      <div class="mc-main" onclick="openD(23)">
-        <div class="mc-name">Bruno fight case info — need Isa ID</div>
-        <div class="mc-meta">
-          <span class="mc-prop" style="background:#e2445c18;color:#e2445c;">Legal</span>
-          
-          
-        </div>
-      </div>
-      <span class="mc-edit" onclick="openD(23)">✎</span>
-    </div>
-    <div class="mcf">
-      <div class="mcf-st"><span class="sp" style="background:#e8eaf0;color:#5a5e78;" onclick="cycSt(23,event)">To do</span></div>
-      <span class="mcf-days" style="background:#ffe4e9;color:#8c0022;">16d</span>
-    </div>
-    <!-- DESKTOP CELLS -->
-    <div class="td td-cb"><div class="cb " onclick="toggle(23,event)"><span class="ck">✓</span></div></div>
-    <div class="td" style="">
-      <div class="pc"><div class="pn" style="color:#e2445c;"><span style="display:inline-block;width:7px;height:7px;border-radius:50%;background:#e2445c;margin-right:4px;vertical-align:middle;"></span>Legal</div><div class="pa">Legal matters</div></div>
-    </div>
-    <div class="td" style="cursor:pointer;" onclick="openD(23)"><span class="tn">Bruno fight case info — need Isa ID</span></div>
-    <div class="td" style=""><span class="wp" style="background:#e2445c18;color:#e2445c;">Legal</span></div>
-    <div class="td" style="padding:7px 9px;"><span class="sp" style="background:#e8eaf0;color:#5a5e78;" onclick="cycSt(23,event)">To do</span></div>
-    <div class="td" style="justify-content:center;"><span style="font-size:11px;font-weight:700;padding:3px 7px;border-radius:20px;background:#ffe4e9;color:#8c0022;">16d</span></div>
-    <div class="td" style="padding:0;justify-content:center;"><span class="eb" onclick="openD(23)">✎</span></div></div><div class="tr">
-    <!-- MOBILE CARD -->
-    <div class="mct">
-      <div class="mcb-wrap"><div class="cb " onclick="toggle(33,event)"><span class="ck">✓</span></div></div>
-      <div class="mc-main" onclick="openD(33)">
-        <div class="mc-name">PSG 2026 Annual Report — verify notice and file (L21000359855)</div>
-        <div class="mc-meta">
-          <span class="mc-prop" style="background:#e2445c18;color:#e2445c;">Legal</span>
-          <span style="font-size:11px;color:var(--blue);">📝</span>
-          
-        </div>
-      </div>
-      <span class="mc-edit" onclick="openD(33)">✎</span>
-    </div>
-    <div class="mcf">
-      <div class="mcf-st"><span class="sp" style="background:#e8eaf0;color:#5a5e78;" onclick="cycSt(33,event)">To do</span></div>
-      <span class="mcf-days" style="background:#d7f7e8;color:#005735;">Today</span>
-    </div>
-    <!-- DESKTOP CELLS -->
-    <div class="td td-cb"><div class="cb " onclick="toggle(33,event)"><span class="ck">✓</span></div></div>
-    <div class="td" style="">
-      <div class="pc"><div class="pn" style="color:#e2445c;"><span style="display:inline-block;width:7px;height:7px;border-radius:50%;background:#e2445c;margin-right:4px;vertical-align:middle;"></span>Legal</div><div class="pa">Legal matters</div></div>
-    </div>
-    <div class="td" style="cursor:pointer;" onclick="openD(33)"><span class="tn">PSG 2026 Annual Report — verify notice and file (L21000359855)</span><span class="nd"></span></div>
-    <div class="td" style=""><span class="wp" style="background:#e2445c18;color:#e2445c;">Legal</span></div>
-    <div class="td" style="padding:7px 9px;"><span class="sp" style="background:#e8eaf0;color:#5a5e78;" onclick="cycSt(33,event)">To do</span></div>
-    <div class="td" style="justify-content:center;"><span style="font-size:11px;font-weight:700;padding:3px 7px;border-radius:20px;background:#d7f7e8;color:#005735;">Today</span></div>
-    <div class="td" style="padding:0;justify-content:center;"><span class="eb" onclick="openD(33)">✎</span></div></div><div class="nr"><div class="nr-cell" style="">📝 Florida renewal notice. Verify sender legitimacy before filing.</div></div></div><div class="add-row"><span style="font-size:15px;">+</span> Add item</div></div></div><div class="grp"><div class="grp-hdr"><div class="grp-bar" style="background:#808080;"></div><div class="grp-name" style="color:#808080;">Ops / Tech</div><div class="grp-badge">0/7 done</div><div class="grp-chev">▾</div></div><div class="tbl"><div class="thead"><div class="th"></div><div class="th">Property</div><div class="th">Task</div><div class="th">Workstream</div><div class="th">Status</div><div class="th">Days open</div><div class="th"></div></div><div><div class="tr">
-    <!-- MOBILE CARD -->
-    <div class="mct">
-      <div class="mcb-wrap"><div class="cb " onclick="toggle(24,event)"><span class="ck">✓</span></div></div>
-      <div class="mc-main" onclick="openD(24)">
-        <div class="mc-name">Storetrak review — API?</div>
-        <div class="mc-meta">
-          <span class="mc-prop" style="background:#80808018;color:#808080;">Ops / Tech</span>
-          
-          
-        </div>
-      </div>
-      <span class="mc-edit" onclick="openD(24)">✎</span>
-    </div>
-    <div class="mcf">
-      <div class="mcf-st"><span class="sp" style="background:#e8eaf0;color:#5a5e78;" onclick="cycSt(24,event)">To do</span></div>
-      <span class="mcf-days" style="background:#ffe4e9;color:#8c0022;">16d</span>
-    </div>
-    <!-- DESKTOP CELLS -->
-    <div class="td td-cb"><div class="cb " onclick="toggle(24,event)"><span class="ck">✓</span></div></div>
-    <div class="td" style="">
-      <div class="pc"><div class="pn" style="color:#808080;"><span style="display:inline-block;width:7px;height:7px;border-radius:50%;background:#808080;margin-right:4px;vertical-align:middle;"></span>Ops / Tech</div><div class="pa">Operations &amp; systems</div></div>
-    </div>
-    <div class="td" style="cursor:pointer;" onclick="openD(24)"><span class="tn">Storetrak review — API?</span></div>
-    <div class="td" style=""><span class="wp" style="background:#80808018;color:#808080;">Ops</span></div>
-    <div class="td" style="padding:7px 9px;"><span class="sp" style="background:#e8eaf0;color:#5a5e78;" onclick="cycSt(24,event)">To do</span></div>
-    <div class="td" style="justify-content:center;"><span style="font-size:11px;font-weight:700;padding:3px 7px;border-radius:20px;background:#ffe4e9;color:#8c0022;">16d</span></div>
-    <div class="td" style="padding:0;justify-content:center;"><span class="eb" onclick="openD(24)">✎</span></div></div><div class="tr">
-    <!-- MOBILE CARD -->
-    <div class="mct">
-      <div class="mcb-wrap"><div class="cb " onclick="toggle(25,event)"><span class="ck">✓</span></div></div>
-      <div class="mc-main" onclick="openD(25)">
-        <div class="mc-name">EWA &amp; SAI (Special Assignment Inspections)</div>
-        <div class="mc-meta">
-          <span class="mc-prop" style="background:#80808018;color:#808080;">Ops / Tech</span>
-          
-          
-        </div>
-      </div>
-      <span class="mc-edit" onclick="openD(25)">✎</span>
-    </div>
-    <div class="mcf">
-      <div class="mcf-st"><span class="sp" style="background:#e8eaf0;color:#5a5e78;" onclick="cycSt(25,event)">To do</span></div>
-      <span class="mcf-days" style="background:#ffe4e9;color:#8c0022;">16d</span>
-    </div>
-    <!-- DESKTOP CELLS -->
-    <div class="td td-cb"><div class="cb " onclick="toggle(25,event)"><span class="ck">✓</span></div></div>
-    <div class="td" style="">
-      <div class="pc"><div class="pn" style="color:#808080;"><span style="display:inline-block;width:7px;height:7px;border-radius:50%;background:#808080;margin-right:4px;vertical-align:middle;"></span>Ops / Tech</div><div class="pa">Operations &amp; systems</div></div>
-    </div>
-    <div class="td" style="cursor:pointer;" onclick="openD(25)"><span class="tn">EWA &amp; SAI (Special Assignment Inspections)</span></div>
-    <div class="td" style=""><span class="wp" style="background:#80808018;color:#808080;">Ops</span></div>
-    <div class="td" style="padding:7px 9px;"><span class="sp" style="background:#e8eaf0;color:#5a5e78;" onclick="cycSt(25,event)">To do</span></div>
-    <div class="td" style="justify-content:center;"><span style="font-size:11px;font-weight:700;padding:3px 7px;border-radius:20px;background:#ffe4e9;color:#8c0022;">16d</span></div>
-    <div class="td" style="padding:0;justify-content:center;"><span class="eb" onclick="openD(25)">✎</span></div></div><div class="tr">
-    <!-- MOBILE CARD -->
-    <div class="mct">
-      <div class="mcb-wrap"><div class="cb " onclick="toggle(26,event)"><span class="ck">✓</span></div></div>
-      <div class="mc-main" onclick="openD(26)">
-        <div class="mc-name">Kuala SAI (Special Assignment Inspections)</div>
-        <div class="mc-meta">
-          <span class="mc-prop" style="background:#80808018;color:#808080;">Ops / Tech</span>
-          
-          
-        </div>
-      </div>
-      <span class="mc-edit" onclick="openD(26)">✎</span>
-    </div>
-    <div class="mcf">
-      <div class="mcf-st"><span class="sp" style="background:#e8eaf0;color:#5a5e78;" onclick="cycSt(26,event)">To do</span></div>
-      <span class="mcf-days" style="background:#ffe4e9;color:#8c0022;">16d</span>
-    </div>
-    <!-- DESKTOP CELLS -->
-    <div class="td td-cb"><div class="cb " onclick="toggle(26,event)"><span class="ck">✓</span></div></div>
-    <div class="td" style="">
-      <div class="pc"><div class="pn" style="color:#808080;"><span style="display:inline-block;width:7px;height:7px;border-radius:50%;background:#808080;margin-right:4px;vertical-align:middle;"></span>Ops / Tech</div><div class="pa">Operations &amp; systems</div></div>
-    </div>
-    <div class="td" style="cursor:pointer;" onclick="openD(26)"><span class="tn">Kuala SAI (Special Assignment Inspections)</span></div>
-    <div class="td" style=""><span class="wp" style="background:#80808018;color:#808080;">Ops</span></div>
-    <div class="td" style="padding:7px 9px;"><span class="sp" style="background:#e8eaf0;color:#5a5e78;" onclick="cycSt(26,event)">To do</span></div>
-    <div class="td" style="justify-content:center;"><span style="font-size:11px;font-weight:700;padding:3px 7px;border-radius:20px;background:#ffe4e9;color:#8c0022;">16d</span></div>
-    <div class="td" style="padding:0;justify-content:center;"><span class="eb" onclick="openD(26)">✎</span></div></div><div class="tr">
-    <!-- MOBILE CARD -->
-    <div class="mct">
-      <div class="mcb-wrap"><div class="cb " onclick="toggle(27,event)"><span class="ck">✓</span></div></div>
-      <div class="mc-main" onclick="openD(27)">
-        <div class="mc-name">See if Claude can do monthly reports</div>
-        <div class="mc-meta">
-          <span class="mc-prop" style="background:#80808018;color:#808080;">Ops / Tech</span>
-          
-          
-        </div>
-      </div>
-      <span class="mc-edit" onclick="openD(27)">✎</span>
-    </div>
-    <div class="mcf">
-      <div class="mcf-st"><span class="sp" style="background:#e8eaf0;color:#5a5e78;" onclick="cycSt(27,event)">To do</span></div>
-      <span class="mcf-days" style="background:#ffe4e9;color:#8c0022;">16d</span>
-    </div>
-    <!-- DESKTOP CELLS -->
-    <div class="td td-cb"><div class="cb " onclick="toggle(27,event)"><span class="ck">✓</span></div></div>
-    <div class="td" style="">
-      <div class="pc"><div class="pn" style="color:#808080;"><span style="display:inline-block;width:7px;height:7px;border-radius:50%;background:#808080;margin-right:4px;vertical-align:middle;"></span>Ops / Tech</div><div class="pa">Operations &amp; systems</div></div>
-    </div>
-    <div class="td" style="cursor:pointer;" onclick="openD(27)"><span class="tn">See if Claude can do monthly reports</span></div>
-    <div class="td" style=""><span class="wp" style="background:#80808018;color:#808080;">Ops</span></div>
-    <div class="td" style="padding:7px 9px;"><span class="sp" style="background:#e8eaf0;color:#5a5e78;" onclick="cycSt(27,event)">To do</span></div>
-    <div class="td" style="justify-content:center;"><span style="font-size:11px;font-weight:700;padding:3px 7px;border-radius:20px;background:#ffe4e9;color:#8c0022;">16d</span></div>
-    <div class="td" style="padding:0;justify-content:center;"><span class="eb" onclick="openD(27)">✎</span></div></div><div class="tr">
-    <!-- MOBILE CARD -->
-    <div class="mct">
-      <div class="mcb-wrap"><div class="cb " onclick="toggle(30,event)"><span class="ck">✓</span></div></div>
-      <div class="mc-main" onclick="openD(30)">
-        <div class="mc-name">Kuala Self Storage — respond to Cycle 3 structural review comments</div>
-        <div class="mc-meta">
-          <span class="mc-prop" style="background:#80808018;color:#808080;">Ops / Tech</span>
-          <span style="font-size:11px;color:var(--blue);">📝</span>
-          
-        </div>
-      </div>
-      <span class="mc-edit" onclick="openD(30)">✎</span>
-    </div>
-    <div class="mcf">
-      <div class="mcf-st"><span class="sp" style="background:#e8eaf0;color:#5a5e78;" onclick="cycSt(30,event)">To do</span></div>
-      <span class="mcf-days" style="background:#d7f7e8;color:#005735;">Today</span>
-    </div>
-    <!-- DESKTOP CELLS -->
-    <div class="td td-cb"><div class="cb " onclick="toggle(30,event)"><span class="ck">✓</span></div></div>
-    <div class="td" style="">
-      <div class="pc"><div class="pn" style="color:#808080;"><span style="display:inline-block;width:7px;height:7px;border-radius:50%;background:#808080;margin-right:4px;vertical-align:middle;"></span>Ops / Tech</div><div class="pa">Operations &amp; systems</div></div>
-    </div>
-    <div class="td" style="cursor:pointer;" onclick="openD(30)"><span class="tn">Kuala Self Storage — respond to Cycle 3 structural review comments</span><span class="nd"></span></div>
-    <div class="td" style=""><span class="wp" style="background:#80808018;color:#808080;">Ops</span></div>
-    <div class="td" style="padding:7px 9px;"><span class="sp" style="background:#e8eaf0;color:#5a5e78;" onclick="cycSt(30,event)">To do</span></div>
-    <div class="td" style="justify-content:center;"><span style="font-size:11px;font-weight:700;padding:3px 7px;border-radius:20px;background:#d7f7e8;color:#005735;">Today</span></div>
-    <div class="td" style="padding:0;justify-content:center;"><span class="eb" onclick="openD(30)">✎</span></div></div><div class="nr"><div class="nr-cell" style="">📝 BP-2025-188598. CEB Structural completed Cycle 3. Written response + revised PDF sheets to Palekana Permits (Heather Enomoto).</div></div><div class="tr">
-    <!-- MOBILE CARD -->
-    <div class="mct">
-      <div class="mcb-wrap"><div class="cb " onclick="toggle(31,event)"><span class="ck">✓</span></div></div>
-      <div class="mc-main" onclick="openD(31)">
-        <div class="mc-name">Extra Space approvals — respond to CP-5199 and CP-5198</div>
-        <div class="mc-meta">
-          <span class="mc-prop" style="background:#80808018;color:#808080;">Ops / Tech</span>
-          <span style="font-size:11px;color:var(--blue);">📝</span>
-          
-        </div>
-      </div>
-      <span class="mc-edit" onclick="openD(31)">✎</span>
-    </div>
-    <div class="mcf">
-      <div class="mcf-st"><span class="sp" style="background:#e8eaf0;color:#5a5e78;" onclick="cycSt(31,event)">To do</span></div>
-      <span class="mcf-days" style="background:#d7f7e8;color:#005735;">Today</span>
-    </div>
-    <!-- DESKTOP CELLS -->
-    <div class="td td-cb"><div class="cb " onclick="toggle(31,event)"><span class="ck">✓</span></div></div>
-    <div class="td" style="">
-      <div class="pc"><div class="pn" style="color:#808080;"><span style="display:inline-block;width:7px;height:7px;border-radius:50%;background:#808080;margin-right:4px;vertical-align:middle;"></span>Ops / Tech</div><div class="pa">Operations &amp; systems</div></div>
-    </div>
-    <div class="td" style="cursor:pointer;" onclick="openD(31)"><span class="tn">Extra Space approvals — respond to CP-5199 and CP-5198</span><span class="nd"></span></div>
-    <div class="td" style=""><span class="wp" style="background:#80808018;color:#808080;">Ops</span></div>
-    <div class="td" style="padding:7px 9px;"><span class="sp" style="background:#e8eaf0;color:#5a5e78;" onclick="cycSt(31,event)">To do</span></div>
-    <div class="td" style="justify-content:center;"><span style="font-size:11px;font-weight:700;padding:3px 7px;border-radius:20px;background:#d7f7e8;color:#005735;">Today</span></div>
-    <div class="td" style="padding:0;justify-content:center;"><span class="eb" onclick="openD(31)">✎</span></div></div><div class="nr"><div class="nr-cell" style="">📝 Two approval requests pending from <a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="214e435361445955534052514042440f424e4c">[email&#160;protected]</a>. Both received Apr 11.</div></div><div class="tr">
-    <!-- MOBILE CARD -->
-    <div class="mct">
-      <div class="mcb-wrap"><div class="cb " onclick="toggle(34,event)"><span class="ck">✓</span></div></div>
-      <div class="mc-main" onclick="openD(34)">
-        <div class="mc-name">Review Camden County NJ site — reply to Jeff Mariottini</div>
-        <div class="mc-meta">
-          <span class="mc-prop" style="background:#80808018;color:#808080;">Ops / Tech</span>
-          <span style="font-size:11px;color:var(--blue);">📝</span>
-          
-        </div>
-      </div>
-      <span class="mc-edit" onclick="openD(34)">✎</span>
-    </div>
-    <div class="mcf">
-      <div class="mcf-st"><span class="sp" style="background:#e8eaf0;color:#5a5e78;" onclick="cycSt(34,event)">To do</span></div>
-      <span class="mcf-days" style="background:#d7f7e8;color:#005735;">Today</span>
-    </div>
-    <!-- DESKTOP CELLS -->
-    <div class="td td-cb"><div class="cb " onclick="toggle(34,event)"><span class="ck">✓</span></div></div>
-    <div class="td" style="">
-      <div class="pc"><div class="pn" style="color:#808080;"><span style="display:inline-block;width:7px;height:7px;border-radius:50%;background:#808080;margin-right:4px;vertical-align:middle;"></span>Ops / Tech</div><div class="pa">Operations &amp; systems</div></div>
-    </div>
-    <div class="td" style="cursor:pointer;" onclick="openD(34)"><span class="tn">Review Camden County NJ site — reply to Jeff Mariottini</span><span class="nd"></span></div>
-    <div class="td" style=""><span class="wp" style="background:#80808018;color:#808080;">Ops</span></div>
-    <div class="td" style="padding:7px 9px;"><span class="sp" style="background:#e8eaf0;color:#5a5e78;" onclick="cycSt(34,event)">To do</span></div>
-    <div class="td" style="justify-content:center;"><span style="font-size:11px;font-weight:700;padding:3px 7px;border-radius:20px;background:#d7f7e8;color:#005735;">Today</span></div>
-    <div class="td" style="padding:0;justify-content:center;"><span class="eb" onclick="openD(34)">✎</span></div></div><div class="nr"><div class="nr-cell" style="">📝 Mariottini sent site attachment. Email unread as of Apr 11.</div></div></div><div class="add-row"><span style="font-size:15px;">+</span> Add item</div></div></div></div>
-    </div>
-    <div id="v-upload" style="display:none">
-      <div class="panel">
-        <div class="panel-h">Upload handwritten list</div>
-        <div class="panel-s">Snap a photo of your weekly list. Claude reads it and merges new items — duplicates skipped.</div>
-        <label for="ufi" class="uzone" style="cursor:pointer;display:block;">
-          <div class="uz-icon">📷</div>
-          <div class="uz-title">Choose a photo</div>
-          <div class="uz-sub">Tap to upload from your camera roll or take a new photo</div>
-        </label>
-        <input type="file" id="ufi" accept="image/*" style="display:none;position:absolute;left:-9999px;" onchange="doUpload(this)">
-        <div style="text-align:center;margin-top:10px;">
-          <label for="ufi-gallery" style="font-size:12px;color:var(--blue);font-weight:700;cursor:pointer;text-decoration:underline;">Or choose from photo library instead</label>
-          <input type="file" id="ufi-gallery" accept="image/*" style="display:none;position:absolute;left:-9999px;" onchange="doUpload(this)">
-        </div>
-        <div class="aistat" id="aistat"></div>
-        <div id="uprv" style="margin-top:10px"></div>
-      </div>
-    </div>
-    <div id="v-add" style="display:none">
-      <div class="panel">
-        <div class="panel-h">Add new item</div>
-        <div class="panel-s">Tap the item after to write notes and link successors.</div>
-        <div class="fg">
-          <div><label class="fl">Task</label><input class="fi" id="ntask" placeholder="What needs to get done?"></div>
-          <div>
-            <label class="fl">Property / Project</label>
-            <input class="fi" id="ncat" list="ncat-list" placeholder="Type or select a property..." autocomplete="off">
-            <datalist id="ncat-list">
-              <optgroup label="Properties">
-              <option value="Bristol"><option value="Dupont"><option value="Sheldon"><option value="Balt St"><option value="350 Lord"><option value="Howard 602"><option value="PG Mall"><option value="Egg Harbor">
-              </optgroup>
-              <optgroup label="Other">
-              <option value="Licensing"><option value="Finance"><option value="Legal"><option value="Ops / Tech">
-              </optgroup>
-            </datalist>
-            <span class="add-new-lnk" onclick="toggleNPF()">+ Add new property or project</span>
-            <div class="npf" id="npf">
-              <div style="font-size:12px;font-weight:700;color:var(--tx2);">New property / project</div>
-              <div class="npr"><input class="npi" id="np-n" placeholder="Name"><input class="npi" id="np-a" placeholder="Address or description"></div>
-              <div class="npr"><input class="npi" id="np-w" placeholder="Workstream (e.g. Construction)"><input class="npi" id="np-c" type="color" value="#579bfc" style="width:44px;min-width:44px;padding:3px;cursor:pointer;"></div>
-              <div class="npr"><button class="npb" onclick="saveNP()">Add</button><button class="npb npc" onclick="toggleNPF()">Cancel</button></div>
-            </div>
-          </div>
-          <div><label class="fl">Note <span style="font-weight:400;text-transform:none;letter-spacing:0;color:var(--tx3)">(optional)</span></label><textarea class="fta" id="nnote" placeholder="Context, sub-tasks..."></textarea></div>
-          <button class="fb" onclick="addTask()">Add to board</button>
-          <div class="fc" id="addfc"></div>
-        </div>
-      </div>
-    </div>
-    <div id="v-history" style="display:none"><div id="histel"></div></div>
-
-    <!-- Claude Chat View -->
-    <div id="v-claude" style="display:none">
-      <div class="panel" style="padding:0;overflow:hidden;display:flex;flex-direction:column;height:calc(100dvh - 160px);min-height:400px;">
-        <div style="padding:16px 18px 12px;border-bottom:1px solid var(--bd);flex-shrink:0;">
-          <div class="panel-h" style="margin-bottom:3px;">🤖 Ask Claude</div>
-          <div class="panel-s" style="margin-bottom:0;">Ask about your tasks, mark things done, get summaries. Claude sees your full task list.</div>
-        </div>
-        <div id="claude-no-key-banner" style="display:none;background:var(--orl);border-bottom:1px solid #fdd;padding:10px 16px;font-size:12px;color:#8a5a00;flex-shrink:0;">
-          ⚠️ <strong>API key needed</strong> — Add your Claude API key in <span onclick="toggleMod()" style="cursor:pointer;text-decoration:underline;font-weight:700;">⚙️ Settings</span> to use this feature.
-        </div>
-        <div id="chat-msgs" style="flex:1;overflow-y:auto;padding:14px 16px;display:flex;flex-direction:column;gap:10px;">
-          <div class="chat-bubble chat-ai">
-            <div class="chat-avatar">C</div>
-            <div class="chat-text">Hi Ibrahim! I can see your full PSG task board. Ask me anything — like <em>"What's still open on Bristol?"</em> or <em>"Mark the Dupont CO as done"</em> or <em>"Give me a status summary."</em></div>
-          </div>
-        </div>
-        <div style="padding:10px 14px;border-top:1px solid var(--bd);display:flex;gap:8px;flex-shrink:0;background:var(--st);">
-          <textarea id="chat-input" placeholder="Ask about your tasks..." rows="1" style="flex:1;font-family:'Figtree',sans-serif;font-size:14px;padding:9px 12px;border:1.5px solid var(--bd2);border-radius:var(--rs);resize:none;outline:none;background:var(--white);color:var(--tx);line-height:1.4;max-height:100px;overflow-y:auto;" onkeydown="if(event.key==='Enter'&amp;&amp;!event.shiftKey){event.preventDefault();sendChat();}"></textarea>
-          <button onclick="sendChat()" style="font-family:'Figtree',sans-serif;font-size:13px;font-weight:700;padding:9px 16px;background:var(--blue);color:#fff;border:none;border-radius:var(--rs);cursor:pointer;flex-shrink:0;align-self:flex-end;">Send</button>
-        </div>
-      </div>
-    </div>
+      <div id="board"></div>
 
     <!-- Export View -->
     <div id="v-export" style="display:none">
@@ -1772,9 +585,8 @@ function dColor(d){
 }
 function syncInd(s){
   const el=document.getElementById('sync-ind');if(!el)return;
-  const m={saving:'⏳ Saving...',saved:'☁️ Synced',offline:'💾 Local',error:'⚠️ Error'};
-  const c={saving:'var(--tx3)',saved:'var(--green)',offline:'var(--org)',error:'var(--red)'};
-  el.textContent=m[s]||'';el.style.color=c[s]||'';
+  el.className='sync-dot '+({'saving':'saving','saved':'','offline':'offline','error':'error'}[s]||'');
+  el.title={'saving':'Saving...','saved':'Synced','offline':'Saved locally','error':'Sync error'}[s]||'';
 }
 
 // ── Storage ──
@@ -1968,8 +780,10 @@ function groups(){
 }
 function updateStats(){
   const tot=tasks.length,dn=tasks.filter(t=>t.status==='done').length,active=tot-dn;
-  document.getElementById('st').textContent=active;document.getElementById('sd').textContent=dn;
-  document.getElementById('sl').textContent=active;document.getElementById('sp').textContent=(tot?Math.round(dn/tot*100):0)+'%';
+  const stEl=document.getElementById('st');if(stEl)stEl.textContent=active;
+  const sdEl=document.getElementById('sd');if(sdEl)sdEl.textContent=dn;
+  const slEl=document.getElementById('sl');if(slEl)slEl.textContent=active;
+  const spEl=document.getElementById('sp');if(spEl)spEl.textContent=(tot?Math.round(dn/tot*100):0)+'%';
   document.getElementById('sb-rem').textContent=tot-dn;
 }
 function renderSB(){
@@ -1997,7 +811,7 @@ function renderTask(t,isSuc,isLast,body){
 
   row.innerHTML=`
     <!-- MOBILE CARD -->
-    <div class="mct">
+    <div class="mc-card"><div class="mct">
       <div class="mcb-wrap"><div class="cb ${isDone?'on':''}" onclick="toggle(${t.id},event)"><span class="ck">✓</span></div></div>
       <div class="mc-main" onclick="openD(${t.id})">
         <div class="mc-name${isDone?' done':''}">${t.task}${t.isNew?'<span class="ntag" style="margin-left:5px;">New</span>':''}</div>
@@ -2013,16 +827,14 @@ function renderTask(t,isSuc,isLast,body){
       <div class="mcf-st"><span class="sp" style="background:${st.bg};color:${st.color};" onclick="cycSt(${t.id},event)">${st.label}</span></div>
       <span class="mcf-days" style="background:${dc.bg};color:${dc.color};">${dSince(t.added)}</span>
     </div>
+    </div><!-- end mc-card -->
     <!-- DESKTOP CELLS -->
     <div class="td td-cb"><div class="cb ${isDone?'on':''}" onclick="toggle(${t.id},event)"><span class="ck">✓</span></div></div>
-    <div class="td" style="${isSuc?'background:#fafbfe;':''}">
-      <div class="pc"><div class="pn" style="color:${p.color};"><span style="display:inline-block;width:7px;height:7px;border-radius:50%;background:${p.color};margin-right:4px;vertical-align:middle;"></span>${t.cat}</div><div class="pa">${p.addr}</div></div>
-    </div>
-    <div class="td" style="cursor:pointer;${isSuc?'background:#fafbfe;padding-left:8px;':''}" onclick="openD(${t.id})">${connector}</div>
-    <div class="td" style="${isSuc?'background:#fafbfe;':''}"><span class="wp" style="background:${p.color}18;color:${p.color};">${p.ws}</span></div>
-    <div class="td" style="padding:7px 9px;${isSuc?'background:#fafbfe;':''}"><span class="sp" style="background:${st.bg};color:${st.color};" onclick="cycSt(${t.id},event)">${st.label}</span></div>
-    <div class="td" style="justify-content:center;${isSuc?'background:#fafbfe;':''}"><span style="font-size:11px;font-weight:700;padding:3px 7px;border-radius:20px;background:${dc.bg};color:${dc.color};">${dSince(t.added)}</span></div>
-    <div class="td" style="padding:0;justify-content:center;${isSuc?'background:#fafbfe;':''}"><span class="eb" onclick="openD(${t.id})">✎</span></div>`;
+    <div class="td"><div class="pc"><div class="pn" style="color:${p.color};"><span style="display:inline-block;width:6px;height:6px;border-radius:50%;background:${p.color};margin-right:5px;flex-shrink:0;"></span>${t.cat}</div></div></div>
+    <div class="td" style="cursor:pointer;" onclick="openD(${t.id})">${connector}</div>
+    <div class="td" style="padding:6px;"><span class="sp" style="background:${st.bg};color:${st.color};" onclick="cycSt(${t.id},event)">${st.label}</span></div>
+    <div class="td" style="justify-content:center;"><span style="font-size:11px;font-weight:700;padding:2px 7px;border-radius:20px;background:${dc.bg};color:${dc.color};">${dSince(t.added)}</span></div>
+    <div class="td" style="padding:0;justify-content:center;"><button class="eb" onclick="openD(${t.id})">✎</button></div>`;
   body.appendChild(row);
 
   if(t.note&&t.note.trim()){
@@ -2039,28 +851,31 @@ function renderBoard(){
   const allSucIds=new Set();
   tasks.forEach(t=>(t.successors||[]).forEach(id=>allSucIds.add(id)));
   Object.entries(groups()).forEach(([grpName,cats])=>{
-    if(af!=="All"&&af!==grpName)return;
+    if(af!=='All'&&af!==grpName)return;
     const grpTasks=Object.values(cats).flat();
+    const grpActive=grpTasks.filter(t=>t.status!=='done').length;
     const grpDone=grpTasks.filter(t=>t.status==='done').length;
-    const color=GRPCOL[grpName]||'#808080';
     const isOpen=openG[grpName]!==false;
-    const grpEl=document.createElement('div');grpEl.className='grp';
-    const hdr=document.createElement('div');hdr.className='grp-hdr';
-    hdr.innerHTML=`<div class="grp-bar" style="background:${color};"></div><div class="grp-name" style="color:${color};">${grpName}</div><div class="grp-badge">${grpDone}/${grpTasks.length} done</div><div class="grp-chev">${isOpen?'▾':'▸'}</div>`;
+    const grpEl=document.createElement('div');grpEl.className='board-group';
+    const hdr=document.createElement('div');hdr.className='bg-hdr';
+    hdr.innerHTML=`<span class="bg-title">${grpName}</span><span class="bg-meta">${grpActive} open${grpDone?' · '+grpDone+' done':''}</span>`;
     hdr.onclick=()=>{openG[grpName]=!openG[grpName];renderBoard();};
     grpEl.appendChild(hdr);
     if(isOpen){
-      const tbl=document.createElement('div');tbl.className='tbl';
-      tbl.innerHTML=`<div class="thead"><div class="th"></div><div class="th">Property</div><div class="th">Task</div><div class="th">Workstream</div><div class="th">Status</div><div class="th">Days open</div><div class="th"></div></div>`;
+      const box=document.createElement('div');box.className='bg-body';
+      // Table header (desktop only)
+      const thead=document.createElement('div');thead.className='th';
+      thead.innerHTML='<div class="th-cell"></div><div class="th-cell">Property</div><div class="th-cell">Task</div><div class="th-cell">Status</div><div class="th-cell">Days</div><div class="th-cell"></div>';
+      box.appendChild(thead);
       const body=document.createElement('div');
       Object.entries(cats).forEach(([cat,ctasks])=>{
         ctasks.forEach(t=>{if(!allSucIds.has(t.id)&&t.status!=='done')renderTask(t,false,false,body);});
       });
-      tbl.appendChild(body);
-      const ar=document.createElement('div');ar.className='add-row';
-      ar.innerHTML='<span style="font-size:15px;">+</span> Add item';
+      box.appendChild(body);
+      const ar=document.createElement('div');ar.className='bg-add';
+      ar.innerHTML='<span style="font-size:16px;line-height:1;">＋</span> Add item';
       ar.onclick=()=>{document.getElementById('ncat').value=Object.keys(cats)[0]||'Bristol';nav('add',null);};
-      tbl.appendChild(ar);grpEl.appendChild(tbl);
+      box.appendChild(ar);grpEl.appendChild(box);
     }
     board.appendChild(grpEl);
   });
