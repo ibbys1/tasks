@@ -300,9 +300,9 @@ body{font-family:'Figtree','Inter',system-ui,sans-serif;background:var(--bg);col
   <div class="content">
     <div id="v-tasks" style="display: block;">
       <div style="display:flex;align-items:center;gap:16px;padding:0 0 14px;">
-        <span style="font-size:13px;font-weight:600;color:var(--tx2);"><span id="sl" style="font-weight:800;color:var(--tx);font-size:16px;">36</span> open</span>
+        <span style="font-size:13px;font-weight:600;color:var(--tx2);"><span id="sl" style="font-weight:800;color:var(--tx);font-size:18px;">36</span> open</span>
         <span style="font-size:13px;font-weight:600;color:var(--tx3);">·</span>
-        <span style="font-size:13px;font-weight:600;color:var(--green);"><span id="sd" style="font-weight:800;font-size:16px;">0</span> done</span>
+        <span style="font-size:13px;font-weight:600;" id="sd-wrap"><span id="sd" style="font-weight:800;font-size:16px;">0</span> done</span>
         <span style="margin-left:auto;font-size:12px;font-weight:700;color:var(--tx3);"><span id="sp">0</span>% complete</span>
         <span id="st" style="display:none">36</span>
       </div>
@@ -782,8 +782,9 @@ function updateStats(){
   const tot=tasks.length,dn=tasks.filter(t=>t.status==='done').length,active=tot-dn;
   const stEl=document.getElementById('st');if(stEl)stEl.textContent=active;
   const sdEl=document.getElementById('sd');if(sdEl)sdEl.textContent=dn;
+  const sdWrap=document.getElementById('sd-wrap');if(sdWrap)sdWrap.style.color=dn>0?'var(--green)':'var(--tx3)';
   const slEl=document.getElementById('sl');if(slEl)slEl.textContent=active;
-  const spEl=document.getElementById('sp');if(spEl)spEl.textContent=(tot?Math.round(dn/tot*100):0)+'%';
+  const spEl=document.getElementById('sp');if(spEl)spEl.textContent=(tot?Math.round(dn/tot*100):0);
   document.getElementById('sb-rem').textContent=tot-dn;
 }
 function renderSB(){
@@ -793,7 +794,7 @@ function renderSB(){
   [...seen].forEach(cat=>{
     const p=pi(cat),left=tasks.filter(t=>t.cat===cat&&t.status!=='done').length;
     const d=document.createElement('div');d.className='sb-prop';
-    d.innerHTML=`<span style="width:8px;height:8px;border-radius:50%;background:${p.color};flex-shrink:0;"></span><div style="flex:1;min-width:0;"><div style="font-size:12px;font-weight:600;">${cat}</div><div style="font-size:10px;color:rgba(255,255,255,.3);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${p.addr}</div></div><span class="sb-cnt">${left}</span>`;
+    d.innerHTML=`<span style="width:7px;height:7px;border-radius:50%;background:${p.color};flex-shrink:0;"></span><span style="font-size:12px;font-weight:600;flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${cat}</span><span class="sb-cnt">${left}</span>`;
     d.onclick=()=>{af=GRPMAP[cat]||cat;document.querySelectorAll('.fbtn').forEach(b=>b.classList.toggle('on',b.textContent.includes(af)));nav('tasks',null);renderBoard();};
     el.appendChild(d);
   });
