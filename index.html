@@ -1438,7 +1438,15 @@ body{display:flex;height:100dvh;overflow:hidden;}
           <div><label class="fl">Task</label><input class="fi" id="ntask" placeholder="What needs to get done?"></div>
           <div>
             <label class="fl">Property / Project</label>
-            <select class="fsl" id="ncat"><optgroup label="Properties"><option value="Bristol">Bristol</option><option value="Dupont">Dupont</option><option value="Sheldon">Sheldon</option><option value="Balt St">Balt St</option><option value="350 Lord">350 Lord</option><option value="Howard 602">Howard 602</option><option value="PG Mall">PG Mall</option><option value="Egg Harbor">Egg Harbor</option></optgroup><optgroup label="Other"><option value="Licensing">Licensing</option><option value="Finance">Finance</option><option value="Legal">Legal</option><option value="Ops / Tech">Ops / Tech</option></optgroup></select>
+            <input class="fi" id="ncat" list="ncat-list" placeholder="Type or select a property..." autocomplete="off">
+            <datalist id="ncat-list">
+              <optgroup label="Properties">
+              <option value="Bristol"><option value="Dupont"><option value="Sheldon"><option value="Balt St"><option value="350 Lord"><option value="Howard 602"><option value="PG Mall"><option value="Egg Harbor">
+              </optgroup>
+              <optgroup label="Other">
+              <option value="Licensing"><option value="Finance"><option value="Legal"><option value="Ops / Tech">
+              </optgroup>
+            </datalist>
             <span class="add-new-lnk" onclick="toggleNPF()">+ Add new property or project</span>
             <div class="npf" id="npf">
               <div style="font-size:12px;font-weight:700;color:var(--tx2);">New property / project</div>
@@ -1544,7 +1552,12 @@ body{display:flex;height:100dvh;overflow:hidden;}
       </select>
     </div>
     <div class="mr" id="d-ih-row" style="display:none"><div class="ml">Person</div><input class="ih" id="d-ih" placeholder="Who has it?"></div>
-    <div class="mr"><div class="ml">Property</div><select class="mc" id="d-cat" onchange="syncProp()"><optgroup label="Properties"><option value="Bristol">Bristol</option><option value="Dupont">Dupont</option><option value="Sheldon">Sheldon</option><option value="Balt St">Balt St</option><option value="350 Lord">350 Lord</option><option value="Howard 602">Howard 602</option><option value="PG Mall">PG Mall</option><option value="Egg Harbor">Egg Harbor</option></optgroup><optgroup label="Other"><option value="Licensing">Licensing</option><option value="Finance">Finance</option><option value="Legal">Legal</option><option value="Ops / Tech">Ops / Tech</option></optgroup></select></div>
+    <div class="mr"><div class="ml">Property</div><input class="fi" id="d-cat" list="dcat-list" autocomplete="off" onchange="syncProp()" oninput="syncProp()" style="margin-bottom:0;">
+      <datalist id="dcat-list">
+        <option value="Bristol"><option value="Dupont"><option value="Sheldon"><option value="Balt St">
+        <option value="350 Lord"><option value="Howard 602"><option value="PG Mall"><option value="Egg Harbor">
+        <option value="Licensing"><option value="Finance"><option value="Legal"><option value="Ops / Tech">
+      </datalist></div>
     <div class="mr"><div class="ml">Added</div><div id="d-added" style="font-size:12px;color:var(--tx3);"></div></div>
   </div>
   <div class="dr-succ">
@@ -1695,7 +1708,7 @@ const DEFAULTS=[
   {id:36,cat:"Finance",task:"Trace March ACH — confirm approval trail with Beth + bank",note:"Beth emailed bank. No approval email found. Awaiting response.",done:false,status:"todo",inhand:"",successors:[],added:"2026-04-11",isNew:false},
 ];
 
-let tasks=[],hist=[],nextId=37,openG={},af="All",curV="tasks",actId=null,saveTimer=null;
+let tasks=[],hist=[],nextId=37,openG={},af="All",curV="tasks",actId=null,saveTimer=null,showDone=false;
 // ── GitHub Repo Storage ──
 const GH_PAT=['ghp_d1jLy','CniAoHzmV','G7BfdU8kb','pKkPqTQ2k','gAqm'].join('');
 const GH_RAW='https://raw.githubusercontent.com/ibbys1/tasks/main/data.json';
@@ -1840,6 +1853,9 @@ function buildSelects(sel){
   const pk=['Bristol','Dupont','Sheldon','Balt St','350 Lord','Howard 602','PG Mall','Egg Harbor'];
   const ok=['Licensing','Finance','Legal','Ops / Tech'];
   const extra=Object.keys(PROPS).filter(k=>!pk.includes(k)&&!ok.includes(k));
+  // Update ncat datalist with any custom properties
+  const dl=document.getElementById('ncat-list');
+  if(dl&&extra.length){extra.forEach(k=>{if(!dl.querySelector(`option[value="${k}"]`)){const o=document.createElement('option');o.value=k;dl.appendChild(o);}});}
   function build(el,v){
     if(!el)return;el.innerHTML='';
     const g1=document.createElement('optgroup');g1.label='Properties';
@@ -1903,9 +1919,9 @@ function groups(){
   return g;
 }
 function updateStats(){
-  const tot=tasks.length,dn=tasks.filter(t=>t.status==='done').length;
-  document.getElementById('st').textContent=tot;document.getElementById('sd').textContent=dn;
-  document.getElementById('sl').textContent=tot-dn;document.getElementById('sp').textContent=(tot?Math.round(dn/tot*100):0)+'%';
+  const tot=tasks.length,dn=tasks.filter(t=>t.status==='done').length,active=tot-dn;
+  document.getElementById('st').textContent=active;document.getElementById('sd').textContent=dn;
+  document.getElementById('sl').textContent=active;document.getElementById('sp').textContent=(tot?Math.round(dn/tot*100):0)+'%';
   document.getElementById('sb-rem').textContent=tot-dn;
 }
 function renderSB(){
@@ -1990,7 +2006,7 @@ function renderBoard(){
       tbl.innerHTML=`<div class="thead"><div class="th"></div><div class="th">Property</div><div class="th">Task</div><div class="th">Workstream</div><div class="th">Status</div><div class="th">Days open</div><div class="th"></div></div>`;
       const body=document.createElement('div');
       Object.entries(cats).forEach(([cat,ctasks])=>{
-        ctasks.forEach(t=>{if(!allSucIds.has(t.id))renderTask(t,false,false,body);});
+        ctasks.forEach(t=>{if(!allSucIds.has(t.id)&&t.status!=='done')renderTask(t,false,false,body);});
       });
       tbl.appendChild(body);
       const ar=document.createElement('div');ar.className='add-row';
@@ -2001,13 +2017,52 @@ function renderBoard(){
     board.appendChild(grpEl);
   });
 }
-function render(){updateStats();renderSB();renderBoard();if(curV==='history')renderHist();}
+function renderDoneSection(){
+  const board=document.getElementById('board');
+  const doneTasks=tasks.filter(t=>t.status==='done');
+  if(!doneTasks.length)return;
+  const sec=document.createElement('div');
+  sec.style.cssText='margin-top:18px;border-top:1.5px solid var(--bd);padding-top:14px;';
+  sec.innerHTML=`<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:${showDone?'12':'0'}px;cursor:pointer;user-select:none;padding:0 4px;" onclick="showDone=!showDone;render();">
+    <div style="display:flex;align-items:center;gap:8px;">
+      <span style="font-size:14px;font-weight:800;color:var(--tx3);">✅ Completed</span>
+      <span style="font-size:12px;font-weight:700;background:#d7f7e8;color:#005735;padding:2px 8px;border-radius:20px;">${doneTasks.length}</span>
+    </div>
+    <span style="font-size:12px;color:var(--tx3);font-weight:600;">${showDone?'▲ Hide':'▼ Show'}</span>
+  </div>`;
+  if(showDone){
+    const body=document.createElement('div');
+    doneTasks.forEach(t=>{
+      const p=pi(t.cat);
+      const daysStr=t.daysOpen!=null?`${t.daysOpen}d open`:(t.added?`${Math.floor((Date.now()-new Date(t.added))/86400000)}d open`:'');
+      const completedStr=t.completedAt||today();
+      const row=document.createElement('div');
+      row.style.cssText='display:flex;align-items:center;gap:10px;padding:8px 10px;border-radius:var(--rs);margin-bottom:4px;background:var(--st);opacity:0.75;';
+      row.innerHTML=`<div class="cb on" onclick="toggle(${t.id},event)" style="flex-shrink:0;"><span class="ck">✓</span></div>
+        <span style="font-size:11px;font-weight:700;color:${p.color};background:${p.color}18;padding:2px 7px;border-radius:20px;flex-shrink:0;">${t.cat}</span>
+        <span style="font-size:13px;color:var(--tx2);text-decoration:line-through;flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${t.task}</span>
+        <span style="font-size:11px;color:var(--tx3);flex-shrink:0;white-space:nowrap;">${daysStr}</span>
+        <span style="font-size:11px;color:var(--tx3);flex-shrink:0;white-space:nowrap;">✓ ${completedStr}</span>`;
+      body.appendChild(row);
+    });
+    sec.appendChild(body);
+  }
+  board.appendChild(sec);
+}
+function render(){updateStats();renderSB();renderBoard();renderDoneSection();if(curV==='history')renderHist();}
 
 // ── Actions ──
 function toggle(id,e){
   e.stopPropagation();const t=tasks.find(t=>t.id===id);if(!t)return;
   t.status=t.status==='done'?'todo':'done';t.done=t.status==='done';
-  if(t.done)hist.unshift({date:today(),action:'Completed',task:t.task,cat:t.cat});
+  if(t.done){
+    t.completedAt=new Date().toISOString().split('T')[0];
+    const daysOpen=t.added?Math.floor((Date.now()-new Date(t.added))/86400000):0;
+    t.daysOpen=daysOpen;
+    hist.unshift({date:today(),action:'Completed',task:t.task,cat:t.cat,daysOpen});
+  } else {
+    t.completedAt=null;
+  }
   if(hist.length>200)hist=hist.slice(0,200);save();render();
 }
 function cycSt(id,e){
@@ -2016,7 +2071,12 @@ function cycSt(id,e){
   t.status=order[(order.indexOf(t.status||'todo')+1)%order.length];
   t.done=t.status==='done';
   if(t.status==='inhand'){save();render();openD(id);return;}
-  if(t.done)hist.unshift({date:today(),action:'Completed',task:t.task,cat:t.cat});
+  if(t.done){
+    t.completedAt=new Date().toISOString().split('T')[0];
+    const daysOpen=t.added?Math.floor((Date.now()-new Date(t.added))/86400000):0;
+    t.daysOpen=daysOpen;
+    hist.unshift({date:today(),action:'Completed',task:t.task,cat:t.cat,daysOpen});
+  }
   save();render();
 }
 
@@ -2027,7 +2087,18 @@ function syncSt(){
   sel.style.background=cfg.bg;sel.style.color=cfg.color;
   document.getElementById('d-ih-row').style.display=sel.value==='inhand'?'flex':'none';
 }
-function syncProp(){document.getElementById('d-pb').innerHTML=pbHTML(document.getElementById('d-cat').value);}
+function syncProp(){
+  const cat=document.getElementById('d-cat').value;
+  // If new category typed, add it to PROPS
+  if(cat&&!PROPS[cat])PROPS[cat]={addr:cat,color:'#808080',ws:'Other'};
+  document.getElementById('d-pb').innerHTML=pbHTML(cat);
+  // Update datalist with new prop
+  const dl=document.getElementById('dcat-list');
+  if(dl&&cat&&!dl.querySelector(`option[value="${cat}"]`)){const o=document.createElement('option');o.value=cat;dl.appendChild(o);}
+  // Also update ncat datalist
+  const dl2=document.getElementById('ncat-list');
+  if(dl2&&cat&&!dl2.querySelector(`option[value="${cat}"]`)){const o=document.createElement('option');o.value=cat;dl2.appendChild(o);}
+}
 
 function renderChips(id){
   const t=tasks.find(t=>t.id===id);if(!t)return;
@@ -2093,7 +2164,7 @@ function saveD(){
   if(t.status==='done'&&!hist.some(h=>h.task===t.task&&h.action==='Completed'))hist.unshift({date:today(),action:'Completed',task:t.task,cat:t.cat});
   save();render();
   const fl=document.getElementById('d-flash');fl.style.display='block';
-  setTimeout(()=>{fl.style.display='none';closeD();},700);
+  setTimeout(()=>{fl.style.display='none';closeD();},1500);
 }
 function delFromD(){
   if(!actId)return;if(!confirm('Remove this item?'))return;
@@ -2103,14 +2174,16 @@ function delFromD(){
   tasks=tasks.filter(t=>t.id!==actId);save();render();closeD();
 }
 let autoTimer;
-document.getElementById('d-notes').addEventListener('input',()=>{clearTimeout(autoTimer);autoTimer=setTimeout(saveD,2000);});
-document.getElementById('d-ttl').addEventListener('input',()=>{clearTimeout(autoTimer);autoTimer=setTimeout(saveD,2000);});
+document.getElementById('d-notes').addEventListener('input',()=>{clearTimeout(autoTimer);autoTimer=setTimeout(saveD,5000);});
+document.getElementById('d-ttl').addEventListener('input',()=>{clearTimeout(autoTimer);autoTimer=setTimeout(saveD,5000);});
 document.addEventListener('keydown',e=>{if(e.key==='Escape')closeD();});
 
 // ── Add task ──
 function addTask(){
   const tv=document.getElementById('ntask').value.trim();
-  const cat=document.getElementById('ncat').value;
+  const cat=(document.getElementById('ncat').value||'Ops / Tech').trim();
+  // Auto-add new property if it doesn't exist
+  if(cat&&!PROPS[cat])PROPS[cat]={addr:cat,color:'#808080',ws:'Other'};
   const note=document.getElementById('nnote').value.trim();
   const fc=document.getElementById('addfc');
   if(!tv)return;
