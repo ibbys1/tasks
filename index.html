@@ -195,32 +195,49 @@ body{font-family:'Figtree','Inter',system-ui,sans-serif;background:var(--bg);col
 }
 @media(max-width:768px){
   .sb{display:none;}
-  .main{width:100%;}
-  .topbar{padding:0 14px;}
-  .fbar{padding:8px 14px;}
-  .content{padding:12px 14px;padding-bottom:80px;}
-  .th,.tr{display:none;}
-  .bg-body{background:transparent;border:none;border-radius:0;}
-  .mct,.mcf{display:flex;}
-  .mc-card{background:var(--white);border:1.5px solid var(--bd);border-radius:var(--rs);margin-bottom:6px;overflow:hidden;}
+  .main{width:100vw;}
+  .topbar{padding:0 14px;height:48px;}
+  .tb-title{font-size:14px;}
+  .fbar{padding:6px 14px;gap:6px;}
+  .fbtn{font-size:11px;padding:4px 10px;}
+  .content{padding:10px 12px;padding-bottom:72px;}
+  .th{display:none!important;}
+  .tr{display:block!important;background:var(--white);border:1.5px solid var(--bd);border-radius:var(--rs);margin-bottom:8px;overflow:hidden;}
+  .tr:hover{background:var(--white);}
+  .td{display:none!important;}
+  .mc-card{display:block!important;}
+  .mct{display:flex!important;align-items:center;gap:8px;padding:10px 12px;}
+  .mcf{display:flex!important;align-items:center;justify-content:space-between;padding:6px 12px 10px;}
   .mcb-wrap{flex-shrink:0;}
-  .mc-main{flex:1;min-width:0;cursor:pointer;margin:0 8px;}
-  .mc-name{font-size:13px;font-weight:600;color:var(--tx);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+  .mc-main{flex:1;min-width:0;cursor:pointer;margin:0 6px;}
+  .mc-name{font-size:14px;font-weight:600;color:var(--tx);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
   .mc-name.done{text-decoration:line-through;color:var(--tx3);}
   .mc-meta{display:flex;align-items:center;gap:5px;margin-top:3px;}
-  .mc-prop{font-size:10px;font-weight:700;padding:1px 6px;border-radius:20px;}
+  .mc-prop{font-size:10px;font-weight:700;padding:2px 7px;border-radius:20px;}
   .mc-edit{font-size:16px;color:var(--tx3);cursor:pointer;padding:4px;}
-  .mct{display:flex;align-items:center;gap:6px;padding:10px 12px;}
-  .mcf{align-items:center;justify-content:space-between;padding:7px 12px;border-top:1px solid var(--bd);}
-  .mcf-st .sp{font-size:11px;}
+  .mcf-st .sp{font-size:11px;padding:3px 8px;}
   .mcf-days{font-size:11px;font-weight:700;padding:2px 7px;border-radius:20px;}
-  .mnav{display:flex;position:fixed;bottom:0;left:0;right:0;height:58px;background:var(--sb);border-top:1px solid rgba(255,255,255,.08);z-index:50;padding-bottom:env(safe-area-inset-bottom,0px);}
-  .mnb{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;border:none;background:none;color:rgba(255,255,255,.45);font-family:'Figtree',sans-serif;font-size:10px;font-weight:600;cursor:pointer;padding:0;}
+  .nr{display:block!important;background:#fafbfe;border-top:1px solid var(--bd);padding:4px 12px 8px;font-size:11px;color:var(--tx2);line-height:1.5;}
+  .nr-cell{padding:0!important;}
+  .bg-hdr{padding:10px 0 6px;}
+  .bg-body{border-radius:var(--rs);}
+  .board-group{margin-bottom:14px;}
+  .dr{width:100%!important;right:-100%!important;}
+  .dr.on{right:0!important;}
+  .mnav{display:flex;position:fixed;bottom:0;left:0;right:0;height:56px;background:var(--sb);border-top:1px solid rgba(255,255,255,.1);z-index:50;padding-bottom:env(safe-area-inset-bottom,0px);}
+  .mnb{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;border:none;background:none;color:rgba(255,255,255,.45);font-family:'Figtree',sans-serif;font-size:9px;font-weight:600;cursor:pointer;padding:4px 0;}
   .mnb.on{color:#fff;}
-  .mnb-ic{font-size:18px;line-height:1;}
-  .mfab{position:fixed;bottom:70px;right:16px;width:46px;height:46px;border-radius:50%;background:var(--blue);color:#fff;font-size:22px;border:none;cursor:pointer;box-shadow:0 3px 12px rgba(0,115,234,.4);display:flex;align-items:center;justify-content:center;z-index:51;}
+  .mnb-ic{font-size:20px;line-height:1;}
+  .mfab{display:flex;position:fixed;bottom:66px;right:14px;width:44px;height:44px;border-radius:50%;background:var(--blue);color:#fff;font-size:20px;border:none;cursor:pointer;box-shadow:0 3px 12px rgba(0,115,234,.4);align-items:center;justify-content:center;z-index:51;}
+  .board-sw{margin:0 10px 10px;}
+  .board-btn{font-size:12px;padding:7px 6px;}
+  .panel{padding:14px;}
+  .uzone{padding:1.5rem 1rem;}
 }
-@media(min-width:769px){.mnav,.mfab{display:none;}.mc-card{display:none;}}
+@media(min-width:769px){
+  .mnav,.mfab{display:none;}
+  .mc-card,.mct,.mcf{display:none;}
+}.mc-card{display:none;}}
 
 
 /* ── Drawer old classes ── */
@@ -723,9 +740,27 @@ async function cloudSave(){
 
 async function cloudLoad(){
   try{
-    const r=await fetch(ghRawUrl()+'?t='+Date.now());
-    if(!r.ok)throw new Error('HTTP '+r.status);
-    const data=await r.json();
+    // Always use GitHub API (never CDN raw URL) so we get fresh data immediately
+    const api=ghApiUrl();
+    const r=await fetch(api,{headers:{'Authorization':'token '+GH_PAT},cache:'no-store'});
+    if(!r.ok){
+      // API failed — try raw as fallback (may be stale but better than nothing)
+      const raw=await fetch(ghRawUrl()+'?nocache='+Date.now());
+      if(!raw.ok)throw new Error('HTTP '+raw.status);
+      const data=await raw.json();
+      if(data&&Array.isArray(data.tasks)){
+        tasks=curBoard==='personal'?(data.tasks||[]):buildFromBase(data.tasks);
+        hist=data.hist||[];
+        nextId=Math.max(nextId,data.nextId||1,...(tasks.length?tasks.map(t=>t.id+1):[1]));
+        if(data.props)Object.assign(PROPS,data.props);
+        lsSave();render();syncInd('saved');return data;
+      }
+      return null;
+    }
+    const json=await r.json();
+    setSha(json.sha); // cache SHA for next save
+    const decoded=decodeURIComponent(escape(atob(json.content.replace(/\n/g,''))));
+    const data=JSON.parse(decoded);
     if(data&&Array.isArray(data.tasks)){
       tasks=curBoard==='personal'?(data.tasks||[]):buildFromBase(data.tasks);
       hist=data.hist||[];
@@ -1204,6 +1239,15 @@ let autoTimer;
 document.getElementById('d-notes').addEventListener('input',()=>{clearTimeout(autoTimer);autoTimer=setTimeout(saveD,5000);});
 document.getElementById('d-ttl').addEventListener('input',()=>{clearTimeout(autoTimer);autoTimer=setTimeout(saveD,5000);});
 document.addEventListener('keydown',e=>{if(e.key==='Escape')closeD();});
+// iOS Safari suspends JS when tab goes to background — force save on visibility change
+document.addEventListener('visibilitychange',()=>{
+  if(document.visibilityState==='hidden'&&tasks.length>0){
+    lsSave(); // always save to localStorage immediately (synchronous-like)
+    cloudSave(); // best-effort cloud save (may not complete if page is killed)
+  }
+});
+// Also save when page is about to unload
+window.addEventListener('pagehide',()=>{if(tasks.length>0)lsSave();});
 
 // ── Add task ──
 function addTask(){
