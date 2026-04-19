@@ -1229,15 +1229,33 @@ function addTask(){
 function renderHist(){
   const el=document.getElementById('histel');
   const tot=tasks.length,dn=tasks.filter(t=>t.status==='done').length,pct=tot?Math.round(dn/tot*100):0;
-  let h=`<div class="prog-card"><div class="prog-pct">${pct}%</div><div class="prog-sub">${dn} of ${tot} items complete</div><div class="pbar"><div class="pfill" style="width:${pct}%"></div></div></div>`;
+  // Progress bar
+  let h=`<div style="background:var(--bg);border-radius:var(--rs);padding:14px 16px;margin-bottom:16px;border:1.5px solid var(--bd);">
+    <div style="display:flex;align-items:baseline;justify-content:space-between;margin-bottom:6px;">
+      <span style="font-size:13px;font-weight:600;color:var(--tx2);">${dn} of ${tot} tasks complete</span>
+      <span style="font-size:20px;font-weight:800;color:var(--tx);">${pct}%</span>
+    </div>
+    <div style="height:6px;background:var(--bd2);border-radius:3px;overflow:hidden;">
+      <div style="height:100%;width:${pct}%;background:var(--green);border-radius:3px;transition:width .4s;"></div>
+    </div>
+  </div>`;
+  const pillColors={Completed:{bg:'#d7f7e8',color:'#005735'},Removed:{bg:'#ffe4e9',color:'#8c0022'},'Scan merged':{bg:'#e6f2ff',color:'#004fa8'},Added:{bg:'#fff4df',color:'#8a5a00'}};
   if(hist.length){
-    h+='<div class="htbl">';
+    h+='<div style="display:flex;flex-direction:column;gap:4px;">';
     hist.slice(0,60).forEach(r=>{
-      const pc=r.action==='Completed'?'hp-dn':r.action==='Removed'?'hp-rm':r.action==='Scan merged'?'hp-sc':'hp-ad';
-      h+=`<div class="hr"><span class="hpill ${pc}">${r.action}</span><span class="htask">${r.task}</span><span class="hcat">${r.cat}</span><span class="hdate">${r.date}</span></div>`;
+      const pc=pillColors[r.action]||{bg:'var(--bg)',color:'var(--tx2)'};
+      const daysNote=r.daysOpen!=null?` · ${r.daysOpen}d open`:'';
+      h+=`<div style="display:flex;align-items:center;gap:10px;padding:8px 10px;background:var(--white);border:1.5px solid var(--bd);border-radius:var(--rs);">
+        <span style="font-size:10px;font-weight:700;padding:2px 8px;border-radius:20px;background:${pc.bg};color:${pc.color};white-space:nowrap;flex-shrink:0;">${r.action}</span>
+        <span style="font-size:13px;font-weight:600;flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${r.task}</span>
+        <span style="font-size:11px;color:var(--tx3);white-space:nowrap;flex-shrink:0;">${r.cat}${daysNote}</span>
+        <span style="font-size:11px;color:var(--tx3);white-space:nowrap;flex-shrink:0;">${r.date}</span>
+      </div>`;
     });
     h+='</div>';
-  } else h+='<div style="font-size:13px;color:var(--tx2);padding:.5rem 0;">No activity yet.</div>';
+  } else {
+    h+='<div style="font-size:13px;color:var(--tx2);padding:1rem 0;text-align:center;">No activity yet — complete or add tasks to see history.</div>';
+  }
   el.innerHTML=h;
 }
 
