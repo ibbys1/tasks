@@ -1524,7 +1524,7 @@ function toggleMod(){
   const isOpen=el.style.display==='flex';
   el.style.display=isOpen?'none':'flex';
   if(!isOpen){
-    const ck=document.getElementById('mod-claude-key');if(ck)ck.value=localStorage.getItem('ib-claude-key')||'';
+    const ck=document.getElementById('mod-claude-key');if(ck)ck.value=localStorage.getItem('ib-claude-key')||claudeApiKey||'';
     const htmlTA=document.getElementById('html-code');
     if(htmlTA&&!htmlTA.value){htmlTA.value=document.documentElement.outerHTML;}
     modTab('url');
