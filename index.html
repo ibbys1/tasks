@@ -303,7 +303,7 @@ body{font-family:'Figtree','Inter',system-ui,sans-serif;background:var(--bg);col
         <span style="font-size:13px;font-weight:600;color:var(--tx2);"><span id="sl" style="font-weight:800;color:var(--tx);font-size:16px;">36</span> open</span>
         <span style="font-size:13px;font-weight:600;color:var(--tx3);">·</span>
         <span style="font-size:13px;font-weight:600;color:var(--green);"><span id="sd" style="font-weight:800;font-size:16px;">0</span> done</span>
-        <span id="sp-wrap" style="margin-left:auto;font-size:12px;font-weight:700;color:var(--tx3);"><span id="sp">0</span>% complete</span>
+        <span style="margin-left:auto;font-size:12px;font-weight:700;color:var(--tx3);"><span id="sp">0</span>% complete</span>
         <span id="st" style="display:none">36</span>
       </div>
       <div id="board"></div>
@@ -945,7 +945,31 @@ function renderDoneSection(){
   }
   board.appendChild(sec);
 }
-function render(){updateStats();renderSB();renderBoard();renderDoneSection();if(curV==='history')renderHist();}
+function render(){
+  updateStats();renderSB();renderBoard();renderDoneSection();
+  if(curV==='history')renderHist();
+  // Show task count badge on the inactive board button
+  updateBoardBadge();
+}
+function updateBoardBadge(){
+  // Show count of personal tasks on PSG button when on PSG, and vice versa
+  // We can only show the current board's count; other board count needs localStorage
+  const other=curBoard==='psg'?'personal':'psg';
+  try{
+    const otherTasks=JSON.parse(localStorage.getItem((other==='psg'?'psg-':'personal-')+'tasks')||'[]');
+    const otherOpen=otherTasks.filter(t=>t.status!=='done').length;
+    const btn=document.getElementById('bsw-'+other);
+    if(btn){
+      const existing=btn.querySelector('.obc');
+      if(otherOpen>0){
+        if(existing)existing.textContent=otherOpen;
+        else btn.insertAdjacentHTML('beforeend','<span class="obc">'+otherOpen+'</span>');
+      } else {
+        if(existing)existing.remove();
+      }
+    }
+  }catch(e){}
+}
 
 // ── Actions ──
 function toggle(id,e){
