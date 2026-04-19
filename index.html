@@ -20,6 +20,11 @@
 html,body{height:100%;font-family:'Figtree',sans-serif;background:var(--bg);color:var(--tx);}
 body{display:flex;height:100dvh;overflow:hidden;}
 
+/* ── Board switcher ── */
+.board-sw{display:flex;gap:0;background:rgba(255,255,255,.08);border-radius:8px;padding:3px;margin:0 0 14px;}
+.board-btn{flex:1;font-family:'Figtree',sans-serif;font-size:11px;font-weight:700;padding:6px 8px;border:none;border-radius:6px;cursor:pointer;background:transparent;color:rgba(255,255,255,.5);transition:all .15s;text-align:center;}
+.board-btn.on{background:rgba(255,255,255,.18);color:#fff;}
+/* ── Board switcher ── */
 /* ── Sidebar ── */
 .sb{width:230px;min-width:230px;background:var(--sb);display:flex;flex-direction:column;height:100%;overflow-y:auto;}
 .sb-logo{padding:20px 16px 16px;border-bottom:1px solid rgba(255,255,255,.07);}
@@ -390,7 +395,11 @@ body{display:flex;height:100dvh;overflow:hidden;}
       <div class="sb-dot" style="background:#00ca72;"></div>
     </div>
     <div class="sb-word">my tasks</div>
-    <div class="sb-ws">Ibrahim Sheikh · PSG</div>
+    <div class="sb-ws" id="sb-ws-label">Ibrahim Sheikh · PSG</div>
+  </div>
+  <div class="board-sw">
+    <button class="board-btn on" id="bsw-psg" onclick="switchBoard('psg',this)">💼 PSG</button>
+    <button class="board-btn" id="bsw-personal" onclick="switchBoard('personal',this)">🏠 Personal</button>
   </div>
   <div class="sb-sec">
     <div class="sb-lbl">Views</div>
@@ -1709,11 +1718,34 @@ const DEFAULTS=[
 ];
 
 let tasks=[],hist=[],nextId=37,openG={},af="All",curV="tasks",actId=null,saveTimer=null,showDone=false;
+let curBoard=localStorage.getItem('ib-board')||'psg'; // 'psg' or 'personal'
+
+// Personal board config
+const PERSONAL_PROPS={
+  "Home":    {addr:"Home & family",color:"#579bfc",ws:"Home"},
+  "Health":  {addr:"Health & fitness",color:"#00c875",ws:"Health"},
+  "Finance": {addr:"Personal finances",color:"#fdab3d",ws:"Finance"},
+  "Isabella":{addr:"Isabella & Bella",color:"#e2445c",ws:"Family"},
+  "Travel":  {addr:"Travel & trips",color:"#27b89c",ws:"Travel"},
+  "Learning":{addr:"Learning & reading",color:"#a25ddc",ws:"Learning"},
+  "Other":   {addr:"Miscellaneous",color:"#808080",ws:"Other"}
+};
+const PERSONAL_DEFAULTS=[];
+
+// GitHub storage keys per board
+function ghRawUrl(){return curBoard==='psg'
+  ?'https://raw.githubusercontent.com/ibbys1/tasks/main/data.json'
+  :'https://raw.githubusercontent.com/ibbys1/tasks/main/data-personal.json';}
+function ghApiUrl(){return curBoard==='psg'
+  ?'https://api.github.com/repos/ibbys1/tasks/contents/data.json'
+  :'https://api.github.com/repos/ibbys1/tasks/contents/data-personal.json';}
+function lsKey(k){return (curBoard==='psg'?'psg-':'personal-')+k;}
 // ── GitHub Repo Storage ──
 const GH_PAT=['ghp_d1jLy','CniAoHzmV','G7BfdU8kb','pKkPqTQ2k','gAqm'].join('');
-const GH_RAW='https://raw.githubusercontent.com/ibbys1/tasks/main/data.json';
-const GH_API='https://api.github.com/repos/ibbys1/tasks/contents/data.json';
 let _dataSha=null;
+let _personalSha=null;
+function getSha(){return curBoard==='psg'?_dataSha:_personalSha;}
+function setSha(v){if(curBoard==='psg')_dataSha=v;else _personalSha=v;}
 const DEFAULT_CLAUDE_KEY=['sk-ant-api0','3-5MN8XbPEl','wH7cjENOuHj','OPMVuWUPfZU','jmX4N3ihiSU','fI7JM7ux4GJ','zY09w0fAHIj','aCVV_sQQzDV','9lnyTKYHhTw','-NguAUwAA'].join('');
 let claudeApiKey=localStorage.getItem('ib-claude-key')||DEFAULT_CLAUDE_KEY;
 function getAnthropicHeaders(){return{'Content-Type':'application/json','x-api-key':claudeApiKey,'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'};}
@@ -1747,7 +1779,7 @@ function syncInd(s){
 
 // ── Storage ──
 function lsSave(){
-  try{localStorage.setItem('psg-tasks',JSON.stringify(tasks));localStorage.setItem('psg-hist',JSON.stringify(hist));localStorage.setItem('psg-nid',String(nextId));localStorage.setItem('psg-props',JSON.stringify(PROPS));}catch(e){}
+  try{localStorage.setItem(lsKey('tasks'),JSON.stringify(tasks));localStorage.setItem(lsKey('hist'),JSON.stringify(hist));localStorage.setItem(lsKey('nid'),String(nextId));localStorage.setItem(lsKey('props'),JSON.stringify(PROPS));}catch(e){}
 }
 function save(){
   lsSave();
@@ -1759,27 +1791,27 @@ async function cloudSave(){
   try{
     const payload=JSON.stringify({tasks,hist,nextId,props:PROPS});
     const b64=btoa(unescape(encodeURIComponent(payload)));
-    // Always fetch fresh SHA to avoid stale-SHA conflicts
-    const shaResp=await fetch(GH_API,{headers:{'Authorization':'token '+GH_PAT},cache:'no-store'});
-    if(shaResp.ok){const sd=await shaResp.json();_dataSha=sd.sha;}
+    const api=ghApiUrl();
+    const shaResp=await fetch(api,{headers:{'Authorization':'token '+GH_PAT},cache:'no-store'});
+    if(shaResp.ok){const sd=await shaResp.json();setSha(sd.sha);}
     const body={message:'sync',content:b64};
-    if(_dataSha)body.sha=_dataSha;
-    const resp=await fetch(GH_API,{method:'PUT',headers:{'Authorization':'token '+GH_PAT,'Content-Type':'application/json'},body:JSON.stringify(body)});
+    if(getSha())body.sha=getSha();
+    const resp=await fetch(api,{method:'PUT',headers:{'Authorization':'token '+GH_PAT,'Content-Type':'application/json'},body:JSON.stringify(body)});
     const d=await resp.json();
-    if(d.content){_dataSha=d.content.sha;syncInd('saved');}
+    if(d.content){setSha(d.content.sha);syncInd('saved');}
     else throw new Error('Save failed: '+JSON.stringify(d).slice(0,200));
   }catch(e){syncInd('error');console.error('cloudSave:',e);}
 }
 
 async function cloudLoad(){
   try{
-    // Read from raw URL — no auth needed, full CORS
-    const r=await fetch(GH_RAW+'?t='+Date.now());
+    const r=await fetch(ghRawUrl()+'?t='+Date.now());
     if(!r.ok)throw new Error('HTTP '+r.status);
     const data=await r.json();
-    if(data&&Array.isArray(data.tasks)&&data.tasks.length>0){
-      tasks=buildFromBase(data.tasks);hist=data.hist||[];
-      nextId=Math.max(nextId,data.nextId||1,...tasks.map(t=>t.id+1));
+    if(data&&Array.isArray(data.tasks)){
+      tasks=curBoard==='personal'?(data.tasks||[]):buildFromBase(data.tasks);
+      hist=data.hist||[];
+      nextId=Math.max(nextId,data.nextId||1,...(tasks.length?tasks.map(t=>t.id+1):[1]));
       if(data.props)Object.assign(PROPS,data.props);
       lsSave();render();syncInd('saved');return data;
     }
@@ -1806,15 +1838,27 @@ function buildFromBase(src){
   return base;
 }
 async function load(){
+  // Restore board switcher UI state
+  const bPsg=document.getElementById('bsw-psg');
+  const bPer=document.getElementById('bsw-personal');
+  if(curBoard==='personal'){
+    if(bPsg)bPsg.classList.remove('on');
+    if(bPer)bPer.classList.add('on');
+    const lbl=document.getElementById('sb-ws-label');
+    if(lbl)lbl.textContent='Ibrahim Sheikh · Personal';
+    updateFilterBar();
+  }
   // Load custom props
-  try{const r=localStorage.getItem('psg-props');if(r)Object.assign(PROPS,JSON.parse(r));}catch(e){}
+  try{const r=localStorage.getItem(lsKey('props'));if(r)Object.assign(PROPS,JSON.parse(r));}catch(e){}
   // gasUrl removed - using GitHub storage
   // Load from localStorage first (fast)
+  const isPersonal=curBoard==='personal';
+  if(isPersonal){Object.assign(PROPS,PERSONAL_PROPS);}
   let lsData=null;
-  try{const r=localStorage.getItem('psg-tasks');if(r)lsData=JSON.parse(r);}catch(e){}
-  tasks=buildFromBase(lsData);
-  try{const r=localStorage.getItem('psg-hist');hist=r?JSON.parse(r):[];}catch(e){hist=[];}
-  nextId=Math.max(28,...tasks.map(t=>t.id+1));
+  try{const r=localStorage.getItem(lsKey('tasks'));if(r)lsData=JSON.parse(r);}catch(e){}
+  tasks=isPersonal?(lsData||[]):(buildFromBase(lsData));
+  try{const r=localStorage.getItem(lsKey('hist'));hist=r?JSON.parse(r):[];}catch(e){hist=[];}
+  nextId=Math.max(28,...(tasks.length?tasks.map(t=>t.id+1):[28]));
   Object.keys(GRPCOL).forEach(g=>{if(openG[g]===undefined)openG[g]=true;});
   buildSelects('Bristol');
   syncInd('saving');
@@ -1850,12 +1894,16 @@ async function load(){
 
 // ── Selects ──
 function buildSelects(sel){
+  // Rebuild datalists for current board's categories
+  ['ncat-list','dcat-list'].forEach(id=>{
+    const dl=document.getElementById(id);
+    if(!dl)return;
+    dl.innerHTML='';
+    Object.keys(PROPS).forEach(k=>{const o=document.createElement('option');o.value=k;dl.appendChild(o);});
+  });
   const pk=['Bristol','Dupont','Sheldon','Balt St','350 Lord','Howard 602','PG Mall','Egg Harbor'];
   const ok=['Licensing','Finance','Legal','Ops / Tech'];
   const extra=Object.keys(PROPS).filter(k=>!pk.includes(k)&&!ok.includes(k));
-  // Update ncat datalist with any custom properties
-  const dl=document.getElementById('ncat-list');
-  if(dl&&extra.length){extra.forEach(k=>{if(!dl.querySelector(`option[value="${k}"]`)){const o=document.createElement('option');o.value=k;dl.appendChild(o);}});}
   function build(el,v){
     if(!el)return;el.innerHTML='';
     const g1=document.createElement('optgroup');g1.label='Properties';
@@ -2016,6 +2064,39 @@ function renderBoard(){
     }
     board.appendChild(grpEl);
   });
+}
+function switchBoard(board, el){
+  if(curBoard===board)return;
+  // Save current board state first
+  lsSave();
+  // Switch board
+  curBoard=board;
+  localStorage.setItem('ib-board',board);
+  // Update UI
+  document.querySelectorAll('.board-btn').forEach(b=>b.classList.remove('on'));
+  if(el)el.classList.add('on');
+  // Update sidebar label
+  const lbl=document.getElementById('sb-ws-label');
+  if(lbl)lbl.textContent=board==='psg'?'Ibrahim Sheikh · PSG':'Ibrahim Sheikh · Personal';
+  // Reset state for new board
+  tasks=[];hist=[];nextId=37;showDone=false;openG={};af='All';
+  // Reset PROPS to correct set
+  Object.keys(PROPS).forEach(k=>delete PROPS[k]);
+  if(board==='personal'){Object.assign(PROPS,PERSONAL_PROPS);}
+  else{Object.assign(PROPS,{Bristol:{addr:'Bristol, PA',color:'#579bfc',ws:'Construction'},Dupont:{addr:'Dupont, WA',color:'#579bfc',ws:'Construction'},Sheldon:{addr:'Sheldon, NY',color:'#5dc7f7',ws:'Construction'},'Balt St':{addr:'Baltimore, MD',color:'#5dc7f7',ws:'Construction'},'350 Lord':{addr:'350 Lord Ave',color:'#00c875',ws:'Permitting'},'Howard 602':{addr:'602 Howard St, Baltimore',color:'#00c875',ws:'Leasing'},'PG Mall':{addr:"Prince George's County",color:'#27b89c',ws:'Operations'},'Egg Harbor':{addr:'Egg Harbor, NJ',color:'#27b89c',ws:'Development'},Licensing:{addr:'Multi-state GC licensing',color:'#a25ddc',ws:'Licensing'},Finance:{addr:'Accounting & banking',color:'#fdab3d',ws:'Finance'},Legal:{addr:'Legal matters',color:'#e2445c',ws:'Legal'},'Ops / Tech':{addr:'Operations & systems',color:'#808080',ws:'Ops'}});}
+  // Update filter bar label
+  updateFilterBar();
+  // Load new board
+  load();
+}
+function updateFilterBar(){
+  // Update the filter tabs for the current board
+  const fbar=document.getElementById('fbar');
+  if(!fbar)return;
+  const fbBtns=curBoard==='personal'
+    ?[['All','All'],['Home','🏠 Home'],['Health','💪 Health'],['Finance','💰 Finance'],['Isabella','👨‍👩‍👧 Family'],['Other','✨ Other']]
+    :[['All','All'],['Properties','🏗️ Properties'],['Licensing','📋 Licensing'],['Finance','💰 Finance'],['Legal','⚖️ Legal'],['Ops','⚙️ Ops']];
+  fbar.innerHTML=fbBtns.map((b,i)=>`<button class="fbtn${i===0?' on':''}" onclick="setF('${b[0]}',this)">${b[1]}</button>`).join('');
 }
 function renderDoneSection(){
   const board=document.getElementById('board');
@@ -2286,7 +2367,7 @@ async function doUpload(input){
             max_tokens:2000,
             messages:[{role:'user',content:[
               {type:'image',source:{type:'base64',media_type:mediaType,data:b64}},
-              {type:'text',text:'This is a handwritten PSG real estate task list. Read every line carefully. Property headings (Bristol, Dupont, Sheldon, etc.) mean tasks below belong to that property. Extract each readable task. Return ONLY a valid JSON array: [{"cat":"Bristol","task":"task text","note":"crossed out if applicable"}] Categories: Bristol, Dupont, Sheldon, Balt St, 350 Lord, Howard 602, PG Mall, Egg Harbor, Licensing, Finance, Legal, Ops / Tech'}
+              {type:'text',text:(curBoard==='personal'?'This is a handwritten personal task list. Extract each readable task. Return ONLY a valid JSON array: [{"cat":"Home","task":"task text","note":""}] Categories: Home, Health, Finance, Isabella, Travel, Learning, Other':'This is a handwritten PSG real estate task list. Read every line carefully. Property headings (Bristol, Dupont, Sheldon, etc.) mean tasks below belong to that property. Extract each readable task. Return ONLY a valid JSON array: [{"cat":"Bristol","task":"task text","note":"crossed out if applicable"}] Categories: Bristol, Dupont, Sheldon, Balt St, 350 Lord, Howard 602, PG Mall, Egg Harbor, Licensing, Finance, Legal, Ops / Tech')}
             ]}]}
           )
         });
@@ -2520,7 +2601,7 @@ let chatHistory=[];
 function taskContext(){
   const open=tasks.filter(t=>t.status!=='done');
   const done=tasks.filter(t=>t.status==='done');
-  let txt=`You are a task management assistant for Ibrahim Sheikh at Poverni Sheikh Group (PSG), a real estate development company. You have full access to his task board and can read and update tasks.\n\nCURRENT OPEN TASKS (${open.length}):\n`;
+  let txt=`You are a task management assistant for Ibrahim Sheikh. Current board: ${curBoard==='personal'?'Personal tasks':'PSG real estate (Poverni Sheikh Group)'}. You have full access to his task board.\n\nCURRENT OPEN TASKS (${open.length}):\n`;
   open.forEach(t=>{txt+=`- [ID:${t.id}] [${t.cat}] ${t.task}${t.status==='working'?' (Working on it)':''}${t.status==='inhand'?` (In hands of: ${t.inhand})`:''}${t.note?` | Note: ${t.note}`:''}\n`;});
   txt+=`\nCOMPLETED TASKS (${done.length}): ${done.map(t=>t.task).join(', ')}\n\n`;
   txt+=`You can:\n1. Answer questions about tasks\n2. Give summaries by property or category\n3. When user wants to mark something done, update a status, or add a task, respond with a JSON action block at the END of your message in this exact format:\n<ACTION>{"type":"update_status","id":5,"status":"done"}</ACTION>\n<ACTION>{"type":"add_task","cat":"Bristol","task":"Task name","note":"optional note"}</ACTION>\n<ACTION>{"type":"update_status","id":3,"status":"working"}</ACTION>\nOnly include ACTION blocks when the user explicitly asks to change something. Be concise and helpful.`;
