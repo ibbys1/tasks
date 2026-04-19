@@ -1388,7 +1388,8 @@ async function doUpload(input){
       if(added.length)hist.unshift({date:today(),action:'Scan merged',task:`${added.length} new item(s) from photo`,cat:'Upload'});
       save();render();
       stat.className='aistat ok';
-      stat.textContent=`✅ ${added.length} task(s) added${skipped.length?' · '+skipped.length+' already existed':''}. Tasks saved to cloud.`;
+      const skipMsg = skipped.length ? ` · ${skipped.length} duplicate(s) skipped` : '';
+      stat.textContent=`✅ ${added.length} new task(s) added${skipMsg}.${added.length===0?' Everything already on your board!':''}`;
       if(added.length)prev.innerHTML='<div style="font-size:11px;font-weight:700;color:var(--tx2);text-transform:uppercase;letter-spacing:.08em;margin:.6rem 0 .4rem;">Added to board</div>'+added.map(t=>`<div style="display:flex;align-items:center;gap:9px;padding:8px 12px;background:var(--st);border:1px solid var(--bd);border-radius:var(--rs);margin-bottom:5px;"><span style="font-size:10px;font-weight:700;color:${pi(t.cat).color};text-transform:uppercase;">${t.cat}</span><span style="font-size:13px;font-weight:600;">${t.task}</span></div>`).join('');
       input.value='';
     }catch(err){
@@ -1428,7 +1429,31 @@ async function doUpload(input){
             max_tokens:2000,
             messages:[{role:'user',content:[
               {type:'image',source:{type:'base64',media_type:mediaType,data:b64}},
-              {type:'text',text:(curBoard==='personal'?'This is a handwritten personal task list. Extract each readable task. Return ONLY a valid JSON array: [{"cat":"Home","task":"task text","note":""}] Categories: Home, Health, Finance, Isabella, Travel, Learning, Other':(curBoard==='personal'?'This is a handwritten personal task list. Extract each task. Return ONLY JSON: [{"cat":"Home","task":"task text","note":""}] Categories: Home, Health, Finance, Isabella, Travel, Learning, Other. Skip crossed-out items.':'This is a handwritten PSG real estate task list. Read carefully. Property headings mean tasks below belong to that property. Keep task text concise and clean — remove dashes, bullet points, leading symbols. Return ONLY JSON array: [{"cat":"Bristol","task":"task text","note":""}] Categories: Bristol, Dupont, Sheldon, Balt St, 350 Lord, Howard 602, PG Mall, Egg Harbor, Licensing, Finance, Legal, Ops/Tech. Skip crossed-out items. Do not add items already clearly done.'))}
+              {type:'text',text:(()=>{
+                const existing=tasks.map(t=>`- [${t.cat}] ${t.task}`).join('\n');
+                const cats=curBoard==='personal'
+                  ?'Home, Health, Finance, Isabella, Travel, Learning, Other'
+                  :'Bristol, Dupont, Sheldon, Balt St, 350 Lord, Howard 602, PG Mall, Egg Harbor, Licensing, Finance, Legal, Ops / Tech';
+                const boardDesc=curBoard==='personal'
+                  ?'This is a handwritten personal task list.'
+                  :'This is a handwritten PSG real estate task list. Property headings (Bristol, Dupont, etc.) mean tasks below belong to that property.';
+                return `${boardDesc}
+
+TASKS ALREADY ON MY BOARD (DO NOT ADD THESE):
+${existing}
+
+INSTRUCTIONS:
+1. Read every line of the handwritten list carefully
+2. Extract only tasks that are NOT already in my board above
+3. Skip crossed-out items
+4. Keep task text clean — no leading dashes, bullets, or symbols
+5. Match each task to the closest category: ${cats}
+
+Return ONLY a valid JSON array of NEW tasks not already in my list:
+[{"cat":"Bristol","task":"task text","note":""}]
+
+If everything is already on the board, return an empty array: []`;
+              })()}
             ]}]}
           )
         });
