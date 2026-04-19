@@ -222,6 +222,33 @@ body{font-family:'Figtree','Inter',system-ui,sans-serif;background:var(--bg);col
 }
 @media(min-width:769px){.mnav,.mfab{display:none;}.mc-card{display:none;}}
 
+
+/* ── Drawer old classes ── */
+.dr-top{display:flex;align-items:flex-start;gap:8px;padding:16px 18px 12px;border-bottom:1px solid var(--bd);flex-shrink:0;}
+.dr-title{flex:1;font-family:'Figtree',sans-serif;font-size:15px;font-weight:700;color:var(--tx);border:none;outline:none;resize:none;background:transparent;line-height:1.5;padding:0;}
+.dr-pbadge{display:flex;align-items:center;gap:8px;padding:8px 18px;background:var(--bg);font-size:12px;}
+.dr-meta{padding:12px 18px;display:flex;flex-direction:column;gap:8px;border-bottom:1px solid var(--bd);flex-shrink:0;}
+.mr{display:flex;align-items:center;gap:10px;}
+.ml{font-size:11px;font-weight:700;color:var(--tx3);text-transform:uppercase;letter-spacing:.08em;white-space:nowrap;min-width:60px;}
+.ms{font-family:'Figtree',sans-serif;font-size:13px;padding:7px 10px;border:1.5px solid var(--bd2);border-radius:var(--rs);outline:none;color:var(--tx);background:var(--white);-webkit-appearance:none;flex:1;}
+.ms:focus{border-color:var(--blue);}
+.ih{flex:1;font-family:'Figtree',sans-serif;font-size:13px;padding:7px 10px;border:1.5px solid var(--bd2);border-radius:var(--rs);outline:none;color:var(--tx);}
+.dr-succ{padding:12px 18px;border-bottom:1px solid var(--bd);flex-shrink:0;}
+.dr-succ-title{font-size:11px;font-weight:800;color:var(--tx3);text-transform:uppercase;letter-spacing:.08em;margin-bottom:8px;}
+.dr-notes{display:flex;flex-direction:column;flex:1;min-height:0;overflow:hidden;}
+.dr-nu{font-size:11px;color:var(--tx3);}
+.dr-ta{width:100%;height:100%;min-height:120px;font-family:'Figtree',sans-serif;font-size:14px;line-height:1.7;color:var(--tx);border:none;outline:none;resize:none;background:transparent;padding:0;}
+.dr-ta::placeholder{color:var(--tx3);}
+/* Mobile nav */
+.mnav,.mfab{display:none;}
+@media(max-width:768px){
+  .mnav{display:flex;position:fixed;bottom:0;left:0;right:0;height:58px;background:var(--sb);border-top:1px solid rgba(255,255,255,.08);z-index:50;padding-bottom:env(safe-area-inset-bottom,0px);}
+  .mnb{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;border:none;background:none;color:rgba(255,255,255,.45);font-family:'Figtree',sans-serif;font-size:10px;font-weight:600;cursor:pointer;padding:0;}
+  .mnb.on{color:#fff;}
+  .mnb-ic{font-size:18px;line-height:1;}
+  .mfab{display:flex;position:fixed;bottom:70px;right:16px;width:46px;height:46px;border-radius:50%;background:var(--blue);color:#fff;font-size:22px;border:none;cursor:pointer;box-shadow:0 3px 12px rgba(0,115,234,.4);align-items:center;justify-content:center;z-index:51;}
+}
+
 </style>
 <style id="claude-agent-animation-styles">
       @keyframes claude-pulse {
@@ -307,6 +334,85 @@ body{font-family:'Figtree','Inter',system-ui,sans-serif;background:var(--bg);col
         <span id="st" style="display:none">36</span>
       </div>
       <div id="board"></div>
+    </div><!-- end v-tasks -->
+
+    <!-- Upload View -->
+    <div id="v-upload" style="display:none">
+      <div class="panel">
+        <div class="panel-h">📷 Upload handwritten list</div>
+        <div class="panel-s">Snap a photo of your list. Claude reads it and adds new items — duplicates skipped.</div>
+        <label for="ufi" class="uzone" style="cursor:pointer;display:block;">
+          <div class="uz-icon">📷</div>
+          <div class="uz-title">Choose a photo</div>
+          <div class="uz-sub">Tap to upload from your camera roll or take a new photo</div>
+        </label>
+        <input type="file" id="ufi" accept="image/*" style="display:none;position:absolute;left:-9999px;" onchange="doUpload(this)">
+        <div style="text-align:center;margin-top:10px;">
+          <label for="ufi-gallery" style="font-size:12px;color:var(--blue);font-weight:700;cursor:pointer;text-decoration:underline;">Or choose from photo library instead</label>
+          <input type="file" id="ufi-gallery" accept="image/*" style="display:none;position:absolute;left:-9999px;" onchange="doUpload(this)">
+        </div>
+        <div class="aistat" id="aistat"></div>
+        <div id="uprv" style="margin-top:10px"></div>
+      </div>
+    </div>
+
+    <!-- Add Item View -->
+    <div id="v-add" style="display:none">
+      <div class="panel">
+        <div class="panel-h">＋ Add new item</div>
+        <div class="panel-s">Tap the item after to write notes and link successors.</div>
+        <div class="fg">
+          <div><label class="fl">Task</label><input class="fi" id="ntask" placeholder="What needs to get done?"></div>
+          <div>
+            <label class="fl">Property / Project</label>
+            <input class="fi" id="ncat" list="ncat-list" placeholder="Type or select..." autocomplete="off">
+            <datalist id="ncat-list"></datalist>
+            <span class="add-new-lnk" onclick="toggleNPF()">+ Add new property</span>
+            <div class="npf" id="npf">
+              <div style="font-size:12px;font-weight:700;color:var(--tx2);margin-bottom:8px;">New property / project</div>
+              <div class="npr"><input class="npi" id="np-n" placeholder="Name"><input class="npi" id="np-a" placeholder="Address or description"></div>
+              <div class="npr"><input class="npi" id="np-w" placeholder="Workstream (e.g. Construction)"><input class="npi" id="np-c" type="color" value="#579bfc" style="width:44px;min-width:44px;padding:3px;cursor:pointer;"></div>
+              <div class="npr"><button class="npb" onclick="saveNP()">Add</button><button class="npb npc" onclick="toggleNPF()">Cancel</button></div>
+            </div>
+          </div>
+          <div><label class="fl">Notes (optional)</label><textarea class="fta" id="nnote" placeholder="Any context or notes..."></textarea></div>
+          <button onclick="addTask()" style="font-family:'Figtree',sans-serif;font-size:14px;font-weight:700;padding:13px;background:var(--blue);color:#fff;border:none;border-radius:var(--rs);cursor:pointer;">Add to board</button>
+          <div class="addfc" id="addfc"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- History View -->
+    <div id="v-history" style="display:none">
+      <div class="panel">
+        <div class="panel-h">📊 Activity log</div>
+        <div class="panel-s">Every action taken on your tasks.</div>
+        <div id="histel"></div>
+      </div>
+    </div>
+
+    <!-- Ask Claude View -->
+    <div id="v-claude" style="display:none">
+      <div class="panel" style="padding:0;overflow:hidden;display:flex;flex-direction:column;height:calc(100dvh - 160px);min-height:400px;">
+        <div style="padding:16px 18px 12px;border-bottom:1px solid var(--bd);flex-shrink:0;">
+          <div class="panel-h" style="margin-bottom:3px;">🤖 Ask Claude</div>
+          <div class="panel-s" style="margin-bottom:0;">Ask about your tasks, mark things done, get summaries.</div>
+        </div>
+        <div id="claude-no-key-banner" style="display:none;background:var(--orl);border-bottom:1px solid #fdd;padding:10px 16px;font-size:12px;color:#8a5a00;flex-shrink:0;">
+          ⚠️ <strong>API key needed</strong> — Add your Claude API key in <span onclick="toggleMod()" style="cursor:pointer;text-decoration:underline;font-weight:700;">⚙️ Settings</span>
+        </div>
+        <div id="chat-msgs" style="flex:1;overflow-y:auto;padding:14px 16px;display:flex;flex-direction:column;gap:10px;">
+          <div class="chat-bubble chat-ai">
+            <div class="chat-avatar">C</div>
+            <div class="chat-text">Hi Ibrahim! I can see your full task board. Ask me anything — like <em>"What's still open on Bristol?"</em> or <em>"Mark the Dupont CO as done"</em> or <em>"Give me a status summary."</em></div>
+          </div>
+        </div>
+        <div style="padding:10px 14px;border-top:1px solid var(--bd);display:flex;gap:8px;flex-shrink:0;background:var(--white);">
+          <textarea id="chat-input" placeholder="Ask about your tasks..." rows="1" style="flex:1;font-family:'Figtree',sans-serif;font-size:14px;padding:9px 12px;border:1.5px solid var(--bd2);border-radius:var(--rs);resize:none;outline:none;background:var(--white);color:var(--tx);line-height:1.4;max-height:100px;overflow-y:auto;" onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();sendChat();}"></textarea>
+          <button onclick="sendChat()" style="font-family:'Figtree',sans-serif;font-size:13px;font-weight:700;padding:9px 16px;background:var(--blue);color:#fff;border:none;border-radius:var(--rs);cursor:pointer;flex-shrink:0;align-self:flex-end;">Send</button>
+        </div>
+      </div>
+    </div>
 
     <!-- Export View -->
     <div id="v-export" style="display:none">
