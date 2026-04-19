@@ -1379,8 +1379,15 @@ async function doUpload(input){
         });
       }
       const added=[],skipped=[];
+      // Count how many times the same task text appears in the parsed results
+      const taskFreq={};
+      parsed.forEach(item=>{ if(item.task) taskFreq[normalize(item.task)]=(taskFreq[normalize(item.task)]||0)+1; });
       parsed.forEach(item=>{
         if(!item.task?.trim())return;
+        // Skip tasks that are too short (likely OCR noise)
+        if(item.task.trim().length<5)return;
+        // Skip if same normalized text appears 3+ times across different categories (hallucination pattern)
+        if(taskFreq[normalize(item.task)]>=3){skipped.push(item.task);return;}
         if(isDuplicate(item.task)){skipped.push(item.task);return;}
         const nt={id:nextId++,cat:item.cat||'Ops / Tech',task:item.task.trim(),note:item.note||'',done:false,status:'todo',inhand:'',successors:[],added:new Date().toISOString().split('T')[0],isNew:true};
         tasks.push(nt);added.push(nt);
@@ -1439,20 +1446,22 @@ async function doUpload(input){
                   :'This is a handwritten PSG real estate task list. Property headings (Bristol, Dupont, etc.) mean tasks below belong to that property.';
                 return `${boardDesc}
 
-TASKS ALREADY ON MY BOARD (DO NOT ADD THESE):
+TASKS ALREADY ON MY BOARD (DO NOT ADD THESE — including near-matches and paraphrases):
 ${existing}
 
 INSTRUCTIONS:
-1. Read every line of the handwritten list carefully
-2. Extract only tasks that are NOT already in my board above
-3. Skip crossed-out items
-4. Keep task text clean — no leading dashes, bullets, or symbols
-5. Match each task to the closest category: ${cats}
+1. Read every clearly legible line in the handwritten list
+2. ONLY extract tasks you can read with high confidence — skip anything unclear or illegible
+3. ONLY return tasks genuinely not on the board above — if similar in meaning, SKIP IT
+4. Skip crossed-out items entirely
+5. Keep task text clean — no leading dashes, bullets, or symbols
+6. Match each task to the closest category: ${cats}
+7. Do NOT repeat the same task text for multiple categories
 
-Return ONLY a valid JSON array of NEW tasks not already in my list:
+Return ONLY a valid JSON array of NEW tasks:
 [{"cat":"Bristol","task":"task text","note":""}]
 
-If everything is already on the board, return an empty array: []`;
+If everything is already on the board, return: []`;
               })()}
             ]}]}
           )
