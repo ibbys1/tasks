@@ -794,7 +794,7 @@ function renderSB(){
   [...seen].forEach(cat=>{
     const p=pi(cat),left=tasks.filter(t=>t.cat===cat&&t.status!=='done').length;
     const d=document.createElement('div');d.className='sb-prop';
-    d.innerHTML=`<span style="width:7px;height:7px;border-radius:50%;background:${p.color};flex-shrink:0;"></span><span style="font-size:12px;font-weight:600;flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${cat}</span><span class="sb-cnt">${left}</span>`;
+    d.innerHTML=`<span style="display:inline-block;width:7px;height:7px;border-radius:50%;background:${p.color};flex-shrink:0;min-width:7px;"></span><span style="font-size:12px;font-weight:600;flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:rgba(255,255,255,.85);">${cat}</span><span class="sb-cnt">${left}</span>`;
     d.onclick=()=>{af=GRPMAP[cat]||cat;document.querySelectorAll('.fbtn').forEach(b=>b.classList.toggle('on',b.textContent.includes(af)));nav('tasks',null);renderBoard();};
     el.appendChild(d);
   });
