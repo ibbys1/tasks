@@ -1345,11 +1345,43 @@ async function doUpload(input){
       const endIdx=clean.lastIndexOf(']');
       if(startIdx===-1||endIdx===-1)throw new Error('No JSON array in response: '+clean.slice(0,100));
       const parsed=JSON.parse(clean.slice(startIdx,endIdx+1));
+      // Smart duplicate detection helper
+      function normalize(s){
+        return s.toLowerCase()
+          .replace(/&/g,' and ')
+          .replace(/\bw\//g,'with ')
+          .replace(/\bst\b/g,'street')
+          .replace(/[-—–_/\\|.,!?#*•]/g,' ')
+          .replace(/\s+/g,' ').trim();
+      }
+      function keyWords(s){return normalize(s).split(' ').filter(w=>w.length>3).sort().join(' ');}
+      function isDuplicate(newTask){
+        const nNorm=normalize(newTask);
+        const nKeys=keyWords(newTask);
+        return tasks.some(t=>{
+          const tNorm=normalize(t.task);
+          const tKeys=keyWords(t.task);
+          // 1. Exact match (normalized)
+          if(nNorm===tNorm)return true;
+          // 2. One contains the other (substring, min 10 chars)
+          if(nNorm.length>=10&&tNorm.length>=10&&(nNorm.includes(tNorm)||tNorm.includes(nNorm)))return true;
+          // 3. Same key words (ignore filler words, punctuation)
+          if(nKeys.length>=2&&nKeys===tKeys)return true;
+          // 4. High word overlap: >70% of words in common
+          const nWords=new Set(normalize(newTask).split(' ').filter(w=>w.length>2));
+          const tWords=new Set(normalize(t.task).split(' ').filter(w=>w.length>2));
+          if(nWords.size>=2&&tWords.size>=2){
+            const common=[...nWords].filter(w=>tWords.has(w)).length;
+            const overlap=common/Math.max(nWords.size,tWords.size);
+            if(overlap>=0.75)return true;
+          }
+          return false;
+        });
+      }
       const added=[],skipped=[];
       parsed.forEach(item=>{
         if(!item.task?.trim())return;
-        const isDup=tasks.some(t=>t.cat===item.cat&&t.task.toLowerCase().trim()===item.task.toLowerCase().trim());
-        if(isDup){skipped.push(item.task);return;}
+        if(isDuplicate(item.task)){skipped.push(item.task);return;}
         const nt={id:nextId++,cat:item.cat||'Ops / Tech',task:item.task.trim(),note:item.note||'',done:false,status:'todo',inhand:'',successors:[],added:new Date().toISOString().split('T')[0],isNew:true};
         tasks.push(nt);added.push(nt);
       });
@@ -1396,7 +1428,7 @@ async function doUpload(input){
             max_tokens:2000,
             messages:[{role:'user',content:[
               {type:'image',source:{type:'base64',media_type:mediaType,data:b64}},
-              {type:'text',text:(curBoard==='personal'?'This is a handwritten personal task list. Extract each readable task. Return ONLY a valid JSON array: [{"cat":"Home","task":"task text","note":""}] Categories: Home, Health, Finance, Isabella, Travel, Learning, Other':'This is a handwritten PSG real estate task list. Read every line carefully. Property headings (Bristol, Dupont, Sheldon, etc.) mean tasks below belong to that property. Extract each readable task. Return ONLY a valid JSON array: [{"cat":"Bristol","task":"task text","note":"crossed out if applicable"}] Categories: Bristol, Dupont, Sheldon, Balt St, 350 Lord, Howard 602, PG Mall, Egg Harbor, Licensing, Finance, Legal, Ops / Tech')}
+              {type:'text',text:(curBoard==='personal'?'This is a handwritten personal task list. Extract each readable task. Return ONLY a valid JSON array: [{"cat":"Home","task":"task text","note":""}] Categories: Home, Health, Finance, Isabella, Travel, Learning, Other':(curBoard==='personal'?'This is a handwritten personal task list. Extract each task. Return ONLY JSON: [{"cat":"Home","task":"task text","note":""}] Categories: Home, Health, Finance, Isabella, Travel, Learning, Other. Skip crossed-out items.':'This is a handwritten PSG real estate task list. Read carefully. Property headings mean tasks below belong to that property. Keep task text concise and clean — remove dashes, bullet points, leading symbols. Return ONLY JSON array: [{"cat":"Bristol","task":"task text","note":""}] Categories: Bristol, Dupont, Sheldon, Balt St, 350 Lord, Howard 602, PG Mall, Egg Harbor, Licensing, Finance, Legal, Ops/Tech. Skip crossed-out items. Do not add items already clearly done.'))}
             ]}]}
           )
         });
